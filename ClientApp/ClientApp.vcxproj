@@ -104,10 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\OneDrive - VNU-HCMUS\HCMUS\HK3\MMT\Project\Remote Control\env\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\OneDrive - VNU-HCMUS\HCMUS\HK3\MMT\Project\Remote Control\env\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;libssl.lib;libcrypto.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -118,16 +121,23 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\OneDrive - VNU-HCMUS\HCMUS\HK3\MMT\Project\Remote Control\env\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\OneDrive - VNU-HCMUS\HCMUS\HK3\MMT\Project\Remote Control\env\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;libssl.lib;libcrypto.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cmain.cpp" />
+    <ClCompile Include="mail_service.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mail_service.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

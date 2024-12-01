@@ -61,5 +61,8 @@ install_manifest.txt
 *.tlog
 *.VC.db
 
-# Ignore the env/ folder (e.g., heavy libraries)
+# Ignore the env/ folder (heavy libraries)
 env/
+
+# Ignore config.json file (secret info: client_id, access token,...)
+config.json

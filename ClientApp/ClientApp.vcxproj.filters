@@ -18,5 +18,13 @@
     <ClCompile Include="cmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mail_service.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mail_service.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
