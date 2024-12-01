@@ -1,2 +1,9 @@
 env/
 .vs/
+# Ignore Visual Studio files
+*.vcxproj.user
+*.vcxproj.filters
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
