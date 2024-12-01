@@ -5,85 +5,80 @@ int main() {
 	string recipient = "tienduc712@gmail.com";
 	string subject = "Test Email";
     string body = R"(
+<!DOCTYPE html>
 <html>
 <head>
     <style>
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.5;
-            text-align: center; /* Center-align content */
+            margin: 0;
+            padding: 0;
         }
-        h1 {
-            color: #4CAF50; /* Green color */
+        .container {
+            border: 2px solid #FFA500; /* Cam */
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            margin: 0 auto;
+            background-color: #FFF3E0;
         }
-        .highlight {
-            font-weight: bold; /* Bold text */
-            color: #FF5722; /* Orange color */
-        }
-        .border-box {
-            border: 2px solid #000; /* Black border */
-            padding: 10px;
-            margin: 20px auto;
-            display: inline-block;
-            text-align: left; /* Align text inside the box */
+        .header {
+            font-weight: bold;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #D35400;
         }
         table {
+            width: 100%;
             border-collapse: collapse;
-            width: 80%;
-            margin: 20px auto;
-        }
-        table, th, td {
-            border: 1px solid #000;
         }
         th, td {
+            border: 1px solid #FFA500;
             padding: 10px;
-            text-align: center;
+            text-align: left;
         }
         th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #FFC107;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #FFF8E1;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to Our Newsletter</h1>
-    <p>Dear <span class="highlight">Subscriber</span>,</p>
-    <div class="border-box">
-        <p>This is an <span class="highlight">important announcement</span> with the latest updates:</p>
-        <ul>
-            <li><span class="highlight">Feature 1:</span> Now available for all users.</li>
-            <li><span class="highlight">Feature 2:</span> Improved performance.</li>
-            <li><span class="highlight">Feature 3:</span> New exciting tools.</li>
-        </ul>
+    <div class="container">
+        <div class="header">
+            Running Applications on Server
+        </div>
+        <table>
+            <tr>
+                <th>No.</th>
+                <th>Application Name</th>
+                <th>Process ID</th>
+                <th>Thread Count</th>
+            </tr>
+            <!-- Example rows, replace with actual data -->
+            <tr>
+                <td>1</td>
+                <td>Application A</td>
+                <td>1234</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Application B</td>
+                <td>5678</td>
+                <td>8</td>
+            </tr>
+            <!-- Add more rows dynamically -->
+        </table>
     </div>
-    <h2>Monthly Report</h2>
-    <table>
-        <tr>
-            <th>Category</th>
-            <th>Status</th>
-            <th>Progress</th>
-        </tr>
-        <tr>
-            <td>Feature Development</td>
-            <td>Completed</td>
-            <td>100%</td>
-        </tr>
-        <tr>
-            <td>Bug Fixes</td>
-            <td>In Progress</td>
-            <td>80%</td>
-        </tr>
-        <tr>
-            <td>Testing</td>
-            <td>Pending</td>
-            <td>50%</td>
-        </tr>
-    </table>
-    <p>Thank you for your support!</p>
-    <p><i>The Development Team</i></p>
 </body>
 </html>
 )";
+
 
     send_email(recipient, subject, body);
 
