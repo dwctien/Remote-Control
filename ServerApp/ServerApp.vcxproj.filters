@@ -33,5 +33,13 @@
     <ClCompile Include="process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="file_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="file_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
