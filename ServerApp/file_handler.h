@@ -2,19 +2,28 @@
 #define _FILE_HANDLER_H_
 
 #include <iostream>
+#include <filesystem>
+#include <sstream>
 #include <windows.h>
 #include <shlobj.h>
 #include <string>
+#include <vector>
+#include <algorithm>
+#include "html_generator.h"
 
 using namespace std;
+namespace fs = std::filesystem; // from C++17
+
+vector<string> diskList();
+
+vector<string> listDir(const string& path = "");
+
+string showTree(const string& path);
 
 void copyFile(const string& source, const string& destination);
 
-void deleteFile(const char* filePath);
-
-// Convert from const char* to std::wstring
 wstring stringToWString(const string& str);
 
-void deleteFileToRecycleBin(const char* filePath);
+void deleteFile(const char* filePath);
 
 #endif // !_FILE_HANDLER_H_

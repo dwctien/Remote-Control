@@ -1,4 +1,44 @@
-#include "file_handler.h"
+﻿#include "file_handler.h"
+
+vector<string> diskList() {
+    vector<string> disks;
+    for (char c = 'A'; c <= 'Z'; ++c) {
+        string path = string(1, c) + ":\\";
+        if (fs::exists(path) && fs::is_directory(path)) {
+            disks.push_back(path);
+        }
+    }
+    return disks;
+}
+
+vector<string> listDir(const string& path) {
+    vector<string> result;
+    if (path.empty()) {
+        vector<string> disks = diskList();
+        result.insert(result.end(), disks.begin(), disks.end());
+    }
+    else {
+        if (fs::exists(path) && fs::is_directory(path)) {
+            for (const auto& entry : fs::directory_iterator(path)) {
+                result.push_back(entry.path().filename().string());
+            }
+        }
+    }
+    return result;
+}
+
+string showTree(const string& path = "") {
+    vector<string> subDirs = listDir(path);
+    string html;
+    if (subDirs.empty()) {
+        html = "<p>The directory " + path + " does not exist or is empty.</p>";
+    }
+    else {
+        // Tạo cây thư mục HTML
+        html = html_tree(path, subDirs);
+    }
+    return html;
+}
 
 void copyFile(const string& source, const string& destination) {
     if (CopyFileA(source.c_str(), destination.c_str(), FALSE)) {
@@ -9,26 +49,6 @@ void copyFile(const string& source, const string& destination) {
     }
 }
 
-void deleteFile(const char* filePath) {
-    if (DeleteFileA(filePath)) {
-        std::cout << "File deleted successfully.\n";
-    }
-    else {
-        DWORD error = GetLastError();
-        std::cerr << "Failed to delete file. Error code: " << error << "\n";
-
-        if (error == ERROR_ACCESS_DENIED) {
-            std::cerr << "Access denied. You might need admin privileges or the file might be in use.\n";
-        }
-        else if (error == ERROR_FILE_NOT_FOUND) {
-            std::cerr << "The file was not found. Please check the file path.\n";
-        }
-        else if (error == ERROR_SHARING_VIOLATION) {
-            std::cerr << "The file is currently in use by another program.\n";
-        }
-    }
-}
-
 wstring stringToWString(const string& str) {
     int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
     wstring wstrTo(size_needed, 0);
@@ -36,9 +56,9 @@ wstring stringToWString(const string& str) {
     return wstrTo;
 }
 
-void deleteFileToRecycleBin(const char* filePath) {
+void deleteFile(const char* filePath) {
     // Convert the path from const char* to std::wstring
-    wstring wFilePath = stringToWString(filePath) + L'\0';  // Terminate the string with \0
+    wstring wFilePath = stringToWString(filePath) + L'\0';      // Terminate the string with \0
 
     // Use the SHFILEOPSTRUCT structure to perform the delete operation
     SHFILEOPSTRUCTW fileOp = { 0 };
