@@ -25,10 +25,10 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, string* out);
 
 string refresh_token(const string& client_id, const string& client_secret, const string& refresh_token);
 
-bool send_email(const string& recipient, const string& subject, const string& body);
+bool send_mail(const string& recipient, const string& subject, const string& body);
 
 // Get the subject and body of an email
-bool getEmailContent(const std::string& accessToken, const std::string& messageId, std::string& subject, std::string& body);
+bool read_mail(const std::string& accessToken, const std::string& messageId, std::string& subject, std::string& body);
 
 // Mark email as read
 void markEmailAsRead(const string& accessToken, const string& messageId);

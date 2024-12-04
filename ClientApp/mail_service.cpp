@@ -70,7 +70,7 @@ string refresh_token(const string& client_id, const string& client_secret, const
     }
 }
 
-bool send_email(const string& recipient, const string& subject, const string& body) {
+bool send_mail(const string& recipient, const string& subject, const string& body) {
     try {
         // Load configuration
         json config = load_config();
@@ -131,13 +131,12 @@ bool send_email(const string& recipient, const string& subject, const string& bo
     }
 }
 
-// Function to get the subject and body of an email
-bool getEmailContent(const std::string& accessToken, const std::string& messageId, std::string& subject, std::string& body) {
+bool read_mail(const string& accessToken, const string& messageId, string& subject, string& body) {
     CURL* curl;
     CURLcode res;
-    std::string readBuffer;
+    string readBuffer;
     // The URL to fetch the email content from Gmail API
-    std::string url = "https://gmail.googleapis.com/gmail/v1/users/me/messages/" + messageId + "?format=full";
+    string url = "https://gmail.googleapis.com/gmail/v1/users/me/messages/" + messageId + "?format=full";
 
     curl = curl_easy_init();
     if (curl) {
@@ -168,7 +167,7 @@ bool getEmailContent(const std::string& accessToken, const std::string& messageI
             return true; // Successfully fetched email content
         }
         else {
-            std::cerr << "Error fetching email content: " << curl_easy_strerror(res) << std::endl;
+            cerr << "Error fetching email content: " << curl_easy_strerror(res) << endl;
         }
 
         // Cleaning up
@@ -178,7 +177,6 @@ bool getEmailContent(const std::string& accessToken, const std::string& messageI
     return false; // Failed to fetch email content
 }
 
-// Function to extract IP from the body
 string extractIP(const string& body) {
     regex ipRegex(R"((\d{1,3}\.){3}\d{1,3})");  // Regex pattern to find IP address
     smatch match;
@@ -189,7 +187,6 @@ string extractIP(const string& body) {
     return "";  // If no IP is found, return an empty string
 }
 
-// Function A: Check for new emails, mark as read, validate, and send to server
 void processEmails(const string& accessToken) {
     CURL* curl;
     CURLcode res;
@@ -219,7 +216,7 @@ void processEmails(const string& accessToken) {
 
                     // Get the email details (subject and content)
                     string subject, body;
-                    bool valid = getEmailContent(accessToken, messageId, subject, body);
+                    bool valid = read_mail(accessToken, messageId, subject, body);
 
                     // Call C to check conditions
                     if (validateEmail(subject, body)) {
@@ -243,7 +240,6 @@ void processEmails(const string& accessToken) {
     }
 }
 
-// Function B: Mark email as read
 void markEmailAsRead(const string& accessToken, const string& messageId) {
     string url = "https://gmail.googleapis.com/gmail/v1/users/me/messages/" + messageId + "/modify";
     nlohmann::json payload = { {"removeLabelIds", {"UNREAD"}} };
@@ -266,7 +262,6 @@ void markEmailAsRead(const string& accessToken, const string& messageId) {
     }
 }
 
-// Function C: Validate the email for [ctrl] in subject and IP in body
 bool validateEmail(string& subject, string& body) {
     if (subject.find("[ctrl]") == string::npos) {
         return false;
@@ -282,7 +277,6 @@ bool validateEmail(string& subject, string& body) {
     return false;
 }
 
-// Function D: Send data to server
 void sendToServer(const string& ip, const string& subject, const string& body) {
     CURL* curl;
     CURLcode res;
