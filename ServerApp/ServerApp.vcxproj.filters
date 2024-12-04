@@ -39,12 +39,12 @@
     <ClCompile Include="html_generator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="request_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="file_handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="html_generator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
