@@ -26,5 +26,8 @@
     <ClInclude Include="mail_service.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="csocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

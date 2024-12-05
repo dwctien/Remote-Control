@@ -1,6 +1,6 @@
 #include "mail_service.h"
 
-json load_config(const string& config_file_path) {
+json loadConfig(const string& config_file_path) {
     ifstream config_file(config_file_path);
     if (!config_file.is_open()) {
         throw runtime_error("Could not open config file: " + config_file_path);
@@ -9,6 +9,20 @@ json load_config(const string& config_file_path) {
     json config;
     config_file >> config;
     return config;
+}
+
+string getAccessToken() {
+    // Load configuration
+    json config = loadConfig();
+
+    string client_id = config["client_id"];
+    string client_secret = config["client_secret"];
+    string refresh_token_str = config["refresh_token"];
+
+    // Get a fresh access token
+    string access_token = refreshToken(client_id, client_secret, refresh_token_str);
+
+    return access_token;
 }
 
 string base64_encode(const string& in) {
@@ -30,13 +44,13 @@ string base64_encode(const string& in) {
     return encoded_data;
 }
 
-size_t WriteCallback(void* contents, size_t size, size_t nmemb, string* out) {
+size_t writeCallback(void* contents, size_t size, size_t nmemb, string* out) {
     size_t totalSize = size * nmemb;
     out->append((char*)contents, totalSize);
     return totalSize;
 }
 
-string refresh_token(const string& client_id, const string& client_secret, const string& refresh_token) {
+string refreshToken(const string& client_id, const string& client_secret, const string& refresh_token) {
     CURL* curl = curl_easy_init();
     if (!curl) {
         throw runtime_error("Failed to initialize CURL");
@@ -49,7 +63,7 @@ string refresh_token(const string& client_id, const string& client_secret, const
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_POST, 1L);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_data);
 
     CURLcode res = curl_easy_perform(curl);
@@ -70,17 +84,9 @@ string refresh_token(const string& client_id, const string& client_secret, const
     }
 }
 
-bool send_mail(const string& recipient, const string& subject, const string& body) {
+bool sendMail(const string& recipient, const string& subject, const string& body) {
     try {
-        // Load configuration
-        json config = load_config();
-
-        string client_id = config["client_id"];
-        string client_secret = config["client_secret"];
-        string refresh_token_str = config["refresh_token"];
-
-        // Get a fresh access token
-        string access_token = refresh_token(client_id, client_secret, refresh_token_str);
+        string access_token = getAccessToken();
 
         // Prepare email content
         string email = "From: msg.controller@gmail.com\r\n";
@@ -108,7 +114,7 @@ bool send_mail(const string& recipient, const string& subject, const string& bod
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curl, CURLOPT_POST, 1L);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_data.c_str());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_data);
 
         CURLcode res = curl_easy_perform(curl);
@@ -131,7 +137,7 @@ bool send_mail(const string& recipient, const string& subject, const string& bod
     }
 }
 
-bool read_mail(const string& accessToken, const string& messageId, string& subject, string& body) {
+bool readMail(const string& accessToken, const string& messageId, string& subject, string& body) {
     CURL* curl;
     CURLcode res;
     string readBuffer;
@@ -145,7 +151,7 @@ bool read_mail(const string& accessToken, const string& messageId, string& subje
         headers = curl_slist_append(headers, ("Authorization: Bearer " + accessToken).c_str());
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
         // Sending the request to Gmail API
@@ -187,7 +193,7 @@ string extractIP(const string& body) {
     return "";  // If no IP is found, return an empty string
 }
 
-void processEmails(const string& accessToken) {
+void handleRequest() {
     CURL* curl;
     CURLcode res;
     string readBuffer;
@@ -196,12 +202,15 @@ void processEmails(const string& accessToken) {
     string url = "https://gmail.googleapis.com/gmail/v1/users/me/messages?q=is:unread";
     curl = curl_easy_init();
 
+    // Get access token
+    string access_token = getAccessToken();
+
     if (curl) {
         struct curl_slist* headers = NULL;
-        headers = curl_slist_append(headers, ("Authorization: Bearer " + accessToken).c_str());
+        headers = curl_slist_append(headers, ("Authorization: Bearer " + access_token).c_str());
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
         res = curl_easy_perform(curl);
@@ -211,25 +220,22 @@ void processEmails(const string& accessToken) {
                 for (const auto& message : jsonResponse["messages"]) {
                     string messageId = message["id"];
 
-                    // Call B to mark the email as read
-                    markEmailAsRead(accessToken, messageId);
+                    markEmailAsRead(access_token, messageId);
 
-                    // Get the email details (subject and content)
+                    // Get the subject and body
                     string subject, body;
-                    bool valid = read_mail(accessToken, messageId, subject, body);
+                    bool valid = readMail(access_token, messageId, subject, body);
 
-                    // Call C to check conditions
                     if (validateEmail(subject, body)) {
                         // Extract the IP address from the body
-                        string ip = extractIP(body);
+                        //string ip = extractIP(body);
 
                         // If an IP was found, remove it from the body
-                        if (!ip.empty()) {
-                            body = std::regex_replace(body, regex(ip), ""); // Remove the IP address from the body
-                        }
+                        //if (!ip.empty()) {
+                        //    body = regex_replace(body, regex(ip), ""); // Remove the IP address from the body
+                        //}
 
-                        // Call D to send data to the server with the updated body
-                        sendToServer(ip, subject, body);
+                        runClient(subject, body);
                     }
                 }
             }
@@ -263,11 +269,11 @@ void markEmailAsRead(const string& accessToken, const string& messageId) {
 }
 
 bool validateEmail(string& subject, string& body) {
-    if (subject.find("[ctrl]") == string::npos) {
+    if (subject.find("[ctrl] ") == string::npos) {
         return false;
     }
+    subject.erase(0, 7); // Remove `[ctrl] ` prefix
 
-    subject.erase(0, 6); // Remove [ctrl] prefix
     regex ipRegex(R"((\d{1,3}\.){3}\d{1,3})");
     smatch match;
     if (regex_search(body, match, ipRegex)) {
@@ -308,11 +314,11 @@ void sendToServer(const string& ip, const string& subject, const string& body) {
 }
 
 // Function to continuously check for new emails
-void checkEmailsContinuously(const string& accessToken) {
+void checkMailsContinuously() {
     while (true) {  // Infinite loop to continuously check for new emails
-        processEmails(accessToken);  // Process new emails
+        handleRequest();
 
-        // Wait for a certain period before checking again (e.g., 1 minute)
-        this_thread::sleep_for(chrono::seconds(1)); // Adjust the duration as needed
+        // Wait for a certain period before checking again (1 minute)
+        this_thread::sleep_for(chrono::seconds(1));
     }
 }

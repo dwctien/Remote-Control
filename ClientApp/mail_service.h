@@ -13,36 +13,33 @@
 #include <nlohmann/json.hpp>
 #include <regex>
 #include <thread>
+#include "csocket.h"
 
 using json = nlohmann::json;
 using namespace std;
 
-// Load configuration from `config.json`
-json load_config(const string& config_file_path = "config.json");
+json loadConfig(const string& config_file_path = "config.json");
+
+string getAccessToken();
 
 // Callback for handling response data
-size_t WriteCallback(void* contents, size_t size, size_t nmemb, string* out);
+size_t writeCallback(void* contents, size_t size, size_t nmemb, string* out);
 
-string refresh_token(const string& client_id, const string& client_secret, const string& refresh_token);
+string refreshToken(const string& client_id, const string& client_secret, const string& refresh_token);
 
-bool send_mail(const string& recipient, const string& subject, const string& body);
+bool sendMail(const string& recipient, const string& subject, const string& body);
 
-// Get the subject and body of an email
-bool read_mail(const std::string& accessToken, const std::string& messageId, std::string& subject, std::string& body);
+bool readMail(const string& accessToken, const string& messageId, string& subject, string& body);
 
-// Mark email as read
 void markEmailAsRead(const string& accessToken, const string& messageId);
 
 // Validate the email for [ctrl] in subject and IP in body
 bool validateEmail(string& subject, string& body);
 
-// Send data to server
 void sendToServer(const string& ip, const string& subject, const string& body);
 
-// Check for new emails, mark as read, validate, and send to server
-void processEmails(const string& accessToken);
+void handleRequest();
 
-// Function to continuously check for new emails
-void checkEmailsContinuously(const string& accessToken);
+void checkMailsContinuously();
 
 #endif // !_MAIL_SERVICE_H_

@@ -1,3 +1,4 @@
+#include "ssocket.h"
 #include "file_handler.h"
 
 int main() {
@@ -6,7 +7,7 @@ int main() {
     string htmlOutput = showTree(path);
     cout << htmlOutput << endl;*/
 
-
+    runServer();
 
     return 0;
 }

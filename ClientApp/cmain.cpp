@@ -1,10 +1,12 @@
+#include "csocket.h"
 #include "mail_service.h"
 
 int main() {
 	
-	string ip = "", subject = "", body = "";
-	sendToServer(ip, subject, body);
+	checkMailsContinuously();
 
+	//string ip = "", subject = "", body = "";
+	//sendToServer(ip, subject, body);
 
     //send_mail(recipient, subject, body);
 

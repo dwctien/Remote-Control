@@ -47,5 +47,14 @@
     <ClInclude Include="file_handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="html_generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="request_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ssocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

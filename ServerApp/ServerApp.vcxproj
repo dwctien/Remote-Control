@@ -143,6 +143,7 @@
     <ClInclude Include="file_handler.h" />
     <ClInclude Include="html_generator.h" />
     <ClInclude Include="request_handler.h" />
+    <ClInclude Include="ssocket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

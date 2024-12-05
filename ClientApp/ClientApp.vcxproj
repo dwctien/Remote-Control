@@ -137,6 +137,7 @@
     <ClCompile Include="mail_service.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="csocket.h" />
     <ClInclude Include="mail_service.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
