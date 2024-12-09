@@ -6,8 +6,13 @@
 #include <tuple>
 #include <sstream>
 #include <algorithm>
+#include <filesystem>
 
 using namespace std;
+namespace fs = filesystem;
+
+typedef unsigned char BYTE;
+typedef pair<string, vector<BYTE>> Response;
 
 struct DataFrame {
     string type; // "group" or "single"
