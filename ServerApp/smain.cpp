@@ -1,11 +1,11 @@
 #include "ssocket.h"
-#include "file_handler.h"
+#include "webcam.h"
 
 int main() {
-    // Test showTree()
-    /*string path = "D:\\Materials\\Coding\\Ebook";
-    string htmlOutput = showTree(path);
-    cout << htmlOutput << endl;*/
+    
+    //capturePhoto();
+
+    //Response res = getVideo("vid.avi", 5);
 
     runServer();
 
