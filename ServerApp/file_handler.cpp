@@ -27,17 +27,17 @@ vector<string> listDir(const string& path) {
     return result;
 }
 
-string showTree(const string& path = "") {
+Response showTree(const string& path = "") {
     vector<string> subDirs = listDir(path);
     string html;
     if (subDirs.empty()) {
         html = "<p>The directory " + path + " does not exist or is empty.</p>";
     }
     else {
-        // Tạo cây thư mục HTML
         html = html_tree(path, subDirs);
     }
-    return html;
+
+    return make_pair(html, vector<BYTE>{});
 }
 
 void copyFile(const string& source, const string& destination) {
@@ -56,20 +56,20 @@ wstring stringToWString(const string& str) {
     return wstrTo;
 }
 
-void deleteFile(const char* filePath) {
-    // Convert the path from const char* to std::wstring
-    wstring wFilePath = stringToWString(filePath) + L'\0';      // Terminate the string with \0
-
-    // Use the SHFILEOPSTRUCT structure to perform the delete operation
-    SHFILEOPSTRUCTW fileOp = { 0 };
-    fileOp.wFunc = FO_DELETE;                                   // Set the action to delete
-    fileOp.pFrom = wFilePath.c_str();                           // Specify the file path to be deleted
-    fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION;         // Move the file to the Recycle Bin without requiring confirmation
-
-    if (SHFileOperationW(&fileOp) == 0) {
-        std::cout << "File moved to Recycle Bin successfully.\n";
-    }
-    else {
-        std::cerr << "Failed to move file to Recycle Bin.\n";
-    }
-}
+//void deleteFile(const char* filePath) {
+//    // Convert the path from const char* to std::wstring
+//    wstring wFilePath = stringToWString(filePath) + L'\0';      // Terminate the string with \0
+//
+//    // Use the SHFILEOPSTRUCT structure to perform the delete operation
+//    SHFILEOPSTRUCTW fileOp = { 0 };
+//    fileOp.wFunc = FO_DELETE;                                   // Set the action to delete
+//    fileOp.pFrom = wFilePath.c_str();                           // Specify the file path to be deleted
+//    fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION;         // Move the file to the Recycle Bin without requiring confirmation
+//
+//    if (SHFileOperationW(&fileOp) == 0) {
+//        cout << "File moved to Recycle Bin successfully.\n";
+//    }
+//    else {
+//        cerr << "Failed to move file to Recycle Bin.\n";
+//    }
+//}
