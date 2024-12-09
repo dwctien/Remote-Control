@@ -25,7 +25,7 @@ string getAccessToken() {
     return access_token;
 }
 
-string base64_encode(const string& in) {
+string base64_encode_str(const string& in) {
     BIO* bio, * b64;
     BUF_MEM* bufferPtr;
 
@@ -41,7 +41,74 @@ string base64_encode(const string& in) {
     string encoded_data(bufferPtr->data, bufferPtr->length);
     BIO_free_all(bio);
 
+    // Convert Base64 to URL-safe Base64
+    for (char& c : encoded_data) {
+        if (c == '+') c = '-';
+        else if (c == '/') c = '_';
+    }
+
+    // Remove padding '='
+    while (!encoded_data.empty() && encoded_data.back() == '=') {
+        encoded_data.pop_back();
+    }
+
     return encoded_data;
+}
+
+//string base64_encode_bin(const BYTE* data, size_t size) {
+//    BIO* bio, * b64;
+//    BUF_MEM* bufferPtr;
+//
+//    b64 = BIO_new(BIO_f_base64());
+//    bio = BIO_new(BIO_s_mem());
+//    BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);  // Avoid newline characters
+//    bio = BIO_push(b64, bio);
+//
+//    BIO_write(bio, data, size);
+//    BIO_flush(bio);
+//    BIO_get_mem_ptr(bio, &bufferPtr);
+//
+//    string encoded_data(bufferPtr->data, bufferPtr->length);
+//    BIO_free_all(bio);
+//
+//    // Convert Base64 to URL-safe Base64
+//    for (char& c : encoded_data) {
+//        if (c == '+') c = '-';
+//        else if (c == '/') c = '_';
+//    }
+//
+//    // Remove padding '='
+//    while (!encoded_data.empty() && encoded_data.back() == '=') {
+//        encoded_data.pop_back();
+//    }
+//
+//    return encoded_data;
+//}
+
+string base64_encode_bin(const BYTE* data, size_t length) {
+    static const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    std::string encoded;
+    int val = 0;
+    int valb = -6;
+    for (size_t i = 0; i < length; ++i) {
+        val = (val << 8) + data[i];
+        valb += 8;
+        while (valb >= 0) {
+            encoded.push_back(base64_chars[(val >> valb) & 0x3F]);
+            valb -= 6;
+        }
+    }
+
+    if (valb > -6) {
+        encoded.push_back(base64_chars[((val << 8) >> (valb + 8)) & 0x3F]);
+    }
+
+    while (encoded.size() % 4) {
+        encoded.push_back('=');
+    }
+
+    return encoded;
 }
 
 size_t writeCallback(void* contents, size_t size, size_t nmemb, string* out) {
@@ -84,20 +151,40 @@ string refreshToken(const string& client_id, const string& client_secret, const 
     }
 }
 
-bool sendMail(const string& recipient, const string& subject, const string& body) {
+bool sendMail(const string& recipient, const string& subject, const string& body, const vector<BYTE>& attachment, const string& attachment_filename) {
     try {
         string access_token = getAccessToken();
-
+        
         // Prepare email content
+        string boundary = "__boundary__";
         string email = "From: msg.controller@gmail.com\r\n";
         email += "To: " + recipient + "\r\n";
         email += "Subject: " + subject + "\r\n";
-        email += "Content-Type: text/html; charset=UTF-8\r\n";
-        email += "\r\n";
-        email += body;
+        email += "MIME-Version: 1.0\r\n";
+        email += "Content-Type: multipart/mixed; boundary=\"" + boundary + "\"\r\n\r\n";
 
-        string encoded_email = base64_encode(email);
-        string json_data = "{ \"raw\": \"" + encoded_email + "\" }";
+        // Body part
+        email += "--" + boundary + "\r\n";
+        email += "Content-Type: text/html; charset=UTF-8\r\n";
+        email += "Content-Transfer-Encoding: 7bit\r\n\r\n";
+        email += body + "\r\n";
+
+        // Attachment part
+        if (!attachment.empty()) {
+            string encoded_attachment = base64_encode_bin(attachment.data(), attachment.size());
+
+            email += "--" + boundary + "\r\n";
+            email += "Content-Type: application/octet-stream; name=\"" + attachment_filename + "\"\r\n";
+            email += "Content-Transfer-Encoding: base64\r\n";
+            email += "Content-Disposition: attachment; filename=\"" + attachment_filename + "\"\r\n\r\n";
+            email += encoded_attachment + "\r\n";
+        }
+
+        // End of email
+        email += "--" + boundary + "--\r\n";
+
+        string encoded_email = base64_encode_str(email);
+        string json_data = R"({ "raw": ")" + encoded_email + R"(" })";
 
         // Send email
         CURL* curl = curl_easy_init();
@@ -129,7 +216,6 @@ bool sendMail(const string& recipient, const string& subject, const string& body
 
         cout << "Email sent successfully. Response: " << response_data << endl;
         return true;
-
     }
     catch (const exception& e) {
         cerr << "Error: " << e.what() << endl;
@@ -137,7 +223,7 @@ bool sendMail(const string& recipient, const string& subject, const string& body
     }
 }
 
-bool readMail(const string& accessToken, const string& messageId, string& subject, string& body) {
+bool readMail(const string& accessToken, const string& messageId, string& subject, string& body, string& admin) {
     CURL* curl;
     CURLcode res;
     string readBuffer;
@@ -164,7 +250,19 @@ bool readMail(const string& accessToken, const string& messageId, string& subjec
             for (const auto& header : jsonResponse["payload"]["headers"]) {
                 if (header["name"] == "Subject") {
                     subject = header["value"];
-                    break;
+                }
+                if (header["name"] == "From") {
+                    string from = header["value"];
+
+                    size_t startPos = from.find("<");
+                    size_t endPos = from.find(">");
+
+                    if (startPos != string::npos && endPos != string::npos && endPos > startPos) {
+                        admin = from.substr(startPos + 1, endPos - startPos - 1);
+                    }
+                    else {
+                        admin = from;
+                    }
                 }
             }
 
@@ -183,17 +281,38 @@ bool readMail(const string& accessToken, const string& messageId, string& subjec
     return false; // Failed to fetch email content
 }
 
-string extractIP(const string& body) {
-    regex ipRegex(R"((\d{1,3}\.){3}\d{1,3})");  // Regex pattern to find IP address
-    smatch match;
+void markEmailAsRead(const string& accessToken, const string& messageId) {
+    string url = "https://gmail.googleapis.com/gmail/v1/users/me/messages/" + messageId + "/modify";
+    nlohmann::json payload = { {"removeLabelIds", {"UNREAD"}} };
+    string jsonData = payload.dump();
 
-    if (regex_search(body, match, ipRegex)) {
-        return match.str(0);  // Return the first matched IP address
+    CURL* curl = curl_easy_init();
+    if (curl) {
+        struct curl_slist* headers = NULL;
+        headers = curl_slist_append(headers, ("Authorization: Bearer " + accessToken).c_str());
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
+
+        curl_easy_perform(curl);
+
+        curl_slist_free_all(headers);
+        curl_easy_cleanup(curl);
     }
-    return "";  // If no IP is found, return an empty string
 }
 
-void handleRequest() {
+bool validateIP(string ip_addr) {
+    regex ipRegex(R"((\d{1,3}\.){3}\d{1,3})");
+    smatch match;
+    if (regex_search(ip_addr, match, ipRegex)) {
+        return true;
+    }
+    return false;
+}
+
+void checkMail() {
     CURL* curl;
     CURLcode res;
     string readBuffer;
@@ -223,19 +342,25 @@ void handleRequest() {
                     markEmailAsRead(access_token, messageId);
 
                     // Get the subject and body
-                    string subject, body;
-                    bool valid = readMail(access_token, messageId, subject, body);
+                    string subject, body, admin;
+                    bool valid = readMail(access_token, messageId, subject, body, admin);
 
-                    if (validateEmail(subject, body)) {
-                        // Extract the IP address from the body
-                        //string ip = extractIP(body);
+                    string response_subject = "";
+                    string response_body = "";
+                    string filename = "";
+                    vector <BYTE> response_data = {};
 
-                        // If an IP was found, remove it from the body
-                        //if (!ip.empty()) {
-                        //    body = regex_replace(body, regex(ip), ""); // Remove the IP address from the body
-                        //}
+                    if (validateIP(body)) {
+                        runClient(subject, body, admin, response_subject, response_body, filename, response_data);
 
-                        runClient(subject, body);
+                        cout << "Response mail: " << response_body << "\n";
+                        cout << "Filename: " << filename << "\n";
+
+                        sendMail(admin, response_subject, response_body, response_data, filename);
+                    }
+                    else {
+                        response_body = "Server's IP address is invalid. Please try again.";
+                        sendMail(admin, response_subject, response_body, response_data, filename);
                     }
                 }
             }
@@ -246,79 +371,10 @@ void handleRequest() {
     }
 }
 
-void markEmailAsRead(const string& accessToken, const string& messageId) {
-    string url = "https://gmail.googleapis.com/gmail/v1/users/me/messages/" + messageId + "/modify";
-    nlohmann::json payload = { {"removeLabelIds", {"UNREAD"}} };
-    string jsonData = payload.dump();
-
-    CURL* curl = curl_easy_init();
-    if (curl) {
-        struct curl_slist* headers = NULL;
-        headers = curl_slist_append(headers, ("Authorization: Bearer " + accessToken).c_str());
-        headers = curl_slist_append(headers, "Content-Type: application/json");
-
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
-
-        curl_easy_perform(curl);
-
-        curl_slist_free_all(headers);
-        curl_easy_cleanup(curl);
-    }
-}
-
-bool validateEmail(string& subject, string& body) {
-    if (subject.find("[ctrl] ") == string::npos) {
-        return false;
-    }
-    subject.erase(0, 7); // Remove `[ctrl] ` prefix
-
-    regex ipRegex(R"((\d{1,3}\.){3}\d{1,3})");
-    smatch match;
-    if (regex_search(body, match, ipRegex)) {
-        return true;
-    }
-
-    return false;
-}
-
-void sendToServer(const string& ip, const string& subject, const string& body) {
-    CURL* curl;
-    CURLcode res;
-    string url = "http://" + ip + ":8080";  // Server address and port 8080
-
-    // Combine subject and body into a single string
-    string data = subject + " " + body;
-
-    curl = curl_easy_init();  // Initialize cURL
-    if (curl) {
-        struct curl_slist* headers = NULL;
-        headers = curl_slist_append(headers, "Content-Type: text/plain");  // Set content type to text/plain
-
-        // Set the URL and the data to send
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);  // Set headers
-
-        // Perform the HTTP POST request
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            cerr << "Error sending data: " << curl_easy_strerror(res) << endl;  // Print error if any
-        }
-
-        // Free memory after sending
-        curl_slist_free_all(headers);
-        curl_easy_cleanup(curl);  // Clean up cURL resources
-    }
-}
-
-// Function to continuously check for new emails
 void checkMailsContinuously() {
-    while (true) {  // Infinite loop to continuously check for new emails
-        handleRequest();
-
-        // Wait for a certain period before checking again (1 minute)
+    while (true) {
+        checkMail();
+        
         this_thread::sleep_for(chrono::seconds(1));
     }
 }

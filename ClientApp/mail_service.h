@@ -22,23 +22,24 @@ json loadConfig(const string& config_file_path = "config.json");
 
 string getAccessToken();
 
+string base64_encode_str(const string& in);
+
+string base64_encode_bin(const BYTE* data, size_t size);
+
 // Callback for handling response data
 size_t writeCallback(void* contents, size_t size, size_t nmemb, string* out);
 
 string refreshToken(const string& client_id, const string& client_secret, const string& refresh_token);
 
-bool sendMail(const string& recipient, const string& subject, const string& body);
+bool sendMail(const string& recipient, const string& subject, const string& body, const vector<BYTE>& attachment, const string& attachment_filename);
 
-bool readMail(const string& accessToken, const string& messageId, string& subject, string& body);
+bool readMail(const string& accessToken, const string& messageId, string& subject, string& body, string& admin);
 
 void markEmailAsRead(const string& accessToken, const string& messageId);
 
-// Validate the email for [ctrl] in subject and IP in body
-bool validateEmail(string& subject, string& body);
+bool validateIP(string ip_addr);
 
-void sendToServer(const string& ip, const string& subject, const string& body);
-
-void handleRequest();
+void checkMail();
 
 void checkMailsContinuously();
 
