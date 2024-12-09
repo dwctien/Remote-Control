@@ -66,3 +66,8 @@ env/
 
 # Ignore config.json file (secret info: client_id, access token,...)
 config.json
+
+# Ignore media files
+*.png
+*.jpg
+*.avi
