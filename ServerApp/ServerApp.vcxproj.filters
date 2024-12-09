@@ -18,28 +18,22 @@
     <ClCompile Include="smain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="webcam.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="keyboard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="process.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="file_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="html_generator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="request_handler.cpp">
+    <ClCompile Include="ssocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="request_handle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="webcam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,10 +44,16 @@
     <ClInclude Include="html_generator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="request_handler.h">
+    <ClInclude Include="ssocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ssocket.h">
+    <ClInclude Include="request_handle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="webcam.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
