@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cmain.cpp" />
+    <ClCompile Include="csocket.cpp" />
     <ClCompile Include="mail_service.cpp" />
   </ItemGroup>
   <ItemGroup>

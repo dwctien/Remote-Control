@@ -21,6 +21,9 @@
     <ClCompile Include="mail_service.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="csocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mail_service.h">
