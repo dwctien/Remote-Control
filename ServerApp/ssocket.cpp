@@ -1,29 +1,27 @@
 #include "ssocket.h"
 
 void sendData(SOCKET clientSocket, const string& subject, const string& mail_body, const vector<BYTE>& mail_data) {
-    cout << "check1\n";
     // Send the subject
     uint32_t subjectSize = htonl(subject.size());
     send(clientSocket, reinterpret_cast<const char*>(&subjectSize), sizeof(subjectSize), 0);
     send(clientSocket, subject.c_str(), subject.size(), 0);
-    cout << "check2\n";
     
     // Send the mail_body
     uint32_t bodySize = htonl(mail_body.size());
     send(clientSocket, reinterpret_cast<const char*>(&bodySize), sizeof(bodySize), 0);
     send(clientSocket, mail_body.c_str(), mail_body.size(), 0);
-    cout << "check3\n";
     
 
     // Send the data (image or video) after the body
     if (!mail_data.empty()) {
         uint32_t dataSize = htonl(mail_data.size());
         send(clientSocket, reinterpret_cast<const char*>(&dataSize), sizeof(dataSize), 0);
-        cout << "check4\n";
         send(clientSocket, reinterpret_cast<const char*>(mail_data.data()), mail_data.size(), 0);
-        cout << "check5\n";
     }
-    cout << "check6\n";
+    else {
+        uint32_t dataSize = 0;
+        send(clientSocket, reinterpret_cast<const char*>(&dataSize), sizeof(dataSize), 0);
+    }
 }
 
 void getInfoFromClient(string& msg, string& admin, string& request) {
@@ -72,7 +70,6 @@ void responder(SOCKET clientSocket, string received_data) {
     cout << "Response mail: " << mail_body << "\n";
 
     sendData(clientSocket, subject, mail_body, mail_data);
-    cout << "check7\n";
 }
 
 SOCKET initializeServerSocket() {
