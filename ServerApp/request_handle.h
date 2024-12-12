@@ -10,9 +10,10 @@
 #include <functional>
 #include <iomanip>
 
-#include "file_handler.h"
+#include "file.h"
 #include "screen.h"
 #include "webcam.h"
+#include "keyboard.h"
 
 const string APP_REQ = "[ctrl]"; // Prefix to validate commands
 

