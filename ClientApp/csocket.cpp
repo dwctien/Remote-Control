@@ -41,7 +41,6 @@ void receiveData(SOCKET clientSocket, string& subject, string& mail_body, string
             cerr << "Error: Failed to receive filename length. Code: " << WSAGetLastError() << "\n";
             return;
         }
-
         // Ensure filenameLength is in correct byte order (big-endian)
         filenameLength = ntohl(filenameLength);
 
@@ -53,7 +52,6 @@ void receiveData(SOCKET clientSocket, string& subject, string& mail_body, string
             filename.assign(buffer, filenameLength);
             delete[] buffer;
         }
-
         // Receive the actual file data
         size_t totalReceived = 0;
         mail_data.resize(dataSize - sizeof(filenameLength) - filenameLength);
