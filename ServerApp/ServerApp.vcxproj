@@ -135,8 +135,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="file_handler.cpp" />
+    <ClCompile Include="file.cpp" />
     <ClCompile Include="html_generator.cpp" />
+    <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="request_handle.cpp" />
     <ClCompile Include="screen.cpp" />
     <ClCompile Include="smain.cpp" />
@@ -144,8 +145,9 @@
     <ClCompile Include="webcam.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="file_handler.h" />
+    <ClInclude Include="file.h" />
     <ClInclude Include="html_generator.h" />
+    <ClInclude Include="keyboard.h" />
     <ClInclude Include="request_handle.h" />
     <ClInclude Include="screen.h" />
     <ClInclude Include="ssocket.h" />

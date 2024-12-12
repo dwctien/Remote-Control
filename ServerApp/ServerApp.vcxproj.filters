@@ -18,7 +18,7 @@
     <ClCompile Include="smain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="file_handler.cpp">
+    <ClCompile Include="file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="html_generator.cpp">
@@ -36,9 +36,12 @@
     <ClCompile Include="webcam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="file_handler.h">
+    <ClInclude Include="file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="html_generator.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="webcam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
