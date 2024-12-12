@@ -2,7 +2,11 @@
 
 map<string, map<string, pair<int, Function>>> requestTree = {
     {"file", {
-        {"explore", {1, [](vector<string> params) { return showTree(params[0]); }}}
+        {"explore", {1, [](vector<string> params) { return showTree(params[0]); }}},
+        {"copy", {2, [](vector<string> params) { return copyFile(params[0], params[1]); }}},
+        {"get", {1, [](vector<string> params) { return getFile(params[0]); }}},
+        {"deletebin", {1, [](vector<string> params) { return deleteFileToBin(params[0]); }}},
+        {"deletepmn", {1, [](vector<string> params) { return deleteFilePermanently(params[0]); }}}
     }},
     {"key", {
         {"log", {1, [](vector<string> params) { return getKeyLog(stoi(params[0])); }}},
