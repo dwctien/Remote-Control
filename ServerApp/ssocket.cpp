@@ -155,17 +155,9 @@ void runServer() {
     while (true) {
         recvSize = recv(clientSocket, recvBuf, sizeof(recvBuf), 0);
 
-        if (recvSize == 0) {
-            cout << "Client disconnected.\n";
-            break;
-        }
-        else if (recvSize == SOCKET_ERROR) {
-            cout << "Receive failed\n";
-            break;
-        }
-
         string received_data(recvBuf, recvSize);
         responder(clientSocket, received_data);
+        break;
     }
 
     // Close the connections
