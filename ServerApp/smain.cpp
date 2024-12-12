@@ -1,11 +1,9 @@
-#include "ssocket.h"
-#include "webcam.h"
+﻿#include "ssocket.h"
 
 int main() {
-    
-    //capturePhoto();
 
-    //Response res = getVideo("vid.avi", 5);
+    //Response res = keyLock(10); 
+    //cout << res.first << "\n";
 
     runServer();
 
