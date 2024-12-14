@@ -14,6 +14,8 @@
 #include "screen.h"
 #include "webcam.h"
 #include "keyboard.h"
+#include "process.h"
+#include "app.h"
 
 const string APP_REQ = "[ctrl]"; // Prefix to validate commands
 
@@ -29,5 +31,9 @@ extern vector<string> whiteList;
 vector<string> tokenize(const string& str);
 
 map<string, string> parseRequest(const string& sender, const string& subject, Function& outFunction, vector<string>& outParams);
+
+vector<string> loadAdmin();
+
+bool addAdmin(string gmailAdmin);
 
 #endif // !_REQUEST_HANDLE_H_

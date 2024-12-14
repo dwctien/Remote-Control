@@ -1,4 +1,5 @@
 #include "mail_service.h"
+#include "globals.h"
 
 json loadConfig(const string& config_file_path) {
     ifstream config_file(config_file_path);
@@ -372,9 +373,8 @@ void checkMail() {
 }
 
 void checkMailsContinuously() {
-    while (true) {
+    while (isRunning) {
         checkMail();
-        
         this_thread::sleep_for(chrono::seconds(1));
     }
 }

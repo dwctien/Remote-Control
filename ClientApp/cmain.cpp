@@ -1,8 +1,8 @@
-#include "mail_service.h"
+#include "app_interface.h"
 
 int main() {
 	
-	checkMailsContinuously();
+	runApp();
 
 	return 0;
 }

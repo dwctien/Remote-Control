@@ -135,9 +135,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="app.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="html_generator.cpp" />
     <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="process.cpp" />
     <ClCompile Include="request_handle.cpp" />
     <ClCompile Include="screen.cpp" />
     <ClCompile Include="smain.cpp" />
@@ -145,13 +147,18 @@
     <ClCompile Include="webcam.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="app.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="html_generator.h" />
     <ClInclude Include="keyboard.h" />
+    <ClInclude Include="process.h" />
     <ClInclude Include="request_handle.h" />
     <ClInclude Include="screen.h" />
     <ClInclude Include="ssocket.h" />
     <ClInclude Include="webcam.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="admin.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

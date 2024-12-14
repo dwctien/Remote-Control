@@ -49,7 +49,15 @@ void responder(SOCKET clientSocket, string received_data) {
     string mail_body;
     vector<BYTE> mail_data;
 
-    if (parse_result["msg"] == "Permission denied.") {
+    if (parse_result["msg"] == "add_Admin"){
+        subject = parse_result["command"];
+    }
+    else if (parse_result["msg"] == "get_Admin")
+    {
+        Response content = getFile("admin.txt");
+        mail_data = content.second;
+    }
+    else if (parse_result["msg"] == "Permission denied.") {
         mail_body = html_mail(request, html_msg("You are not allowed to control this PC.", false, true));
     }
     else if (!func || parse_result["msg"] != "Parse request successfully.") {
@@ -133,35 +141,54 @@ SOCKET listenForClient(SOCKET serverSocket) {
     return clientSocket;
 }
 
+//void handleClient(SOCKET clientSocket) {
+//    char recvBuf[1024];
+//    int recvSize;
+//
+//    while (true) {
+//        recvSize = recv(clientSocket, recvBuf, sizeof(recvBuf), 0);
+//
+//        if (recvSize == SOCKET_ERROR) {
+//            cout << "Error receiving data from client" << endl;
+//            break;
+//        }
+//        if (recvSize == 0) {
+//            cout << "Client disconnected" << endl;
+//            break;
+//        }
+//
+//        string received_data(recvBuf, recvSize);
+//        responder(clientSocket, received_data); 
+//    }
+//
+//    closesocket(clientSocket);
+//}
+
 void runServer() {
     // Initialize
     SOCKET serverSocket = initializeServerSocket();
     if (serverSocket == INVALID_SOCKET) {
         return;
     }
-
+    
     // Listen for client to connect
-    SOCKET clientSocket = listenForClient(serverSocket);
-    if (clientSocket == INVALID_SOCKET) {
-        closesocket(serverSocket);
-        WSACleanup();
-        return;
-    }
+    while (true) {  
+        SOCKET clientSocket = listenForClient(serverSocket);
+        if (clientSocket == INVALID_SOCKET) {
+            cout << "Error accepting client connection. Retrying..." << endl;
+            continue;
+        }
+        char recvBuf[1024];
+        int recvSize;
 
-    char recvBuf[1024];
-    int recvSize;
-
-    // Keep receiving request (and sending response) until client disconnects
-    while (true) {
         recvSize = recv(clientSocket, recvBuf, sizeof(recvBuf), 0);
 
         string received_data(recvBuf, recvSize);
         responder(clientSocket, received_data);
-        break;
+        closesocket(clientSocket);
     }
 
-    // Close the connections
-    closesocket(clientSocket);
     closesocket(serverSocket);
     WSACleanup();
 }
+

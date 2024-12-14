@@ -70,6 +70,13 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64); D:\Remote-Control\sfml\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);D:\Remote-Control\sfml\lib</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Remote-Control\sfml\include</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -104,13 +111,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)env\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)env\include; D:\Remote-Control\sfml\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)env\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcurl.lib;libssl.lib;libcrypto.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;libssl.lib;libcrypto.lib; sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-window.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)env\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)env\include; D:\Remote-Control\sfml\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,17 +136,24 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)env\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcurl.lib;libssl.lib;libcrypto.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;libssl.lib;libcrypto.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="app_interface.cpp" />
     <ClCompile Include="cmain.cpp" />
     <ClCompile Include="csocket.cpp" />
+    <ClCompile Include="globals.cpp" />
     <ClCompile Include="mail_service.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="app_interface.h" />
     <ClInclude Include="csocket.h" />
+    <ClInclude Include="globals.h" />
     <ClInclude Include="mail_service.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="admin.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,12 +18,22 @@ map<string, map<string, pair<int, Function>>> requestTree = {
     {"webcam", {
         {"getimg", {0, [](vector<string> params) { return getImage("image.jpg"); }}},
         {"getvid", {1, [](vector<string> params) { return getVideo("video.avi", stoi(params[0])); }}}
+    }},
+    {"process", {
+        {"list", {0, [](vector<string> params) { return listProcess(); }}},
+        {"start", {1, [](vector<string> params) { return startProcess(params[0]); }}}, 
+        {"stop", {1, [](vector<string> params) { return stopProcess(stoi(params[0])); }}} 
+    }},
+    {"app", {
+        {"list", {0, [](vector<string> params) { return listApp(); }}},
+        {"start", {1, [](vector<string> params) { return startApp(params[0]); }}}, 
+        {"stop", {1, [](vector<string> params) { return stopApp(stoi(params[0])); }}} 
     }}
 };
 
 vector<string> whiteList = {
     "tienduc712@gmail.com",
-    "admin@example.com"
+    "caotrongkhang9056@gmail.com"
 };
 
 vector<string> tokenize(const string& str) {
@@ -36,9 +46,64 @@ vector<string> tokenize(const string& str) {
     return tokens;
 }
 
+vector<string> loadAdmin()
+{
+    vector<string> admin;
+    ifstream file("admin.txt");
+    if (!file.is_open())
+        cout << "Cannot open admin file" << endl;
+    else
+    {
+        string line;
+        while (getline(file, line))
+        {
+            if (!line.empty())
+                admin.push_back(line);
+        }
+        file.close();
+    }
+    return admin;
+}
+
+bool addAdmin(string gmailAdmin)
+{
+    ofstream file("admin.txt", ios::app);
+    if (!file.is_open())
+    {
+        cout << "Cannot open admin file" << endl;
+        return false;
+    }
+    else
+    {
+        file << gmailAdmin << endl;
+        file.close();
+        return true;
+    }
+}
+
 map<string, string> parseRequest(const string& sender, const string& subject, Function& outFunction, vector<string>& outParams) {
     auto response = map<string, string>();
     auto tokens = tokenize(subject);
+    
+    vector<string> whiteList = loadAdmin();
+
+    // Add new admin
+    if (sender == "add_Admin") {
+        bool success = addAdmin(subject);
+        response["msg"] = "add_Admin.";
+        if(success)
+            response["command"] = "Add succeeded";
+        else
+            response["command"] = "Add failed";
+        return response;
+    }
+
+    // Send admin file to client
+    if (sender == "get_Admin")
+    {
+        response["msg"] = "get_Admin";
+        return response;
+    }
 
     // Check sender permission
     if (find(whiteList.begin(), whiteList.end(), sender) == whiteList.end()) {

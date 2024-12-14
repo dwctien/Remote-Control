@@ -105,6 +105,7 @@ void runClient(string request, string server_ip, string admin, string& response_
     // Use inet_pton instead of inet_addr
     if (inet_pton(AF_INET, server_ip.c_str(), &serverAddr.sin_addr) <= 0) {
         cout << "Invalid address or address not supported\n";
+        response_subject = "Invalid address";
         closesocket(clientSocket);
         WSACleanup();
         return;
@@ -113,6 +114,7 @@ void runClient(string request, string server_ip, string admin, string& response_
     // Connect to the server
     if (connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
         cout << "Connection to server failed\n";
+        response_subject = "Fail to connect";
         closesocket(clientSocket);
         WSACleanup();
         return;

@@ -3,6 +3,7 @@
 string html_table(const DataFrame& df, const string& note, const string& format) {
     ostringstream html;
 
+    // Add a note if provided
     if (!note.empty()) {
         html << "<p><span style=\"font-weight: bold;\">Note: </span>" << note << "</p>";
     }
@@ -12,12 +13,13 @@ string html_table(const DataFrame& df, const string& note, const string& format)
     const auto& data = df.data;
     const auto& type = df.type;
 
-    html << "<table class=\"" << format << "\">";
+    // Start table with class
+    html << "<table class=\"" << format << "\" style=\"border-collapse: collapse; width: 100%;\">";
 
-    // Add table header
-    html << "<tr class=\"first-row\">";
+    // Add table header with styling
+    html << "<tr class=\"first-row\" style=\"background-color: #f2f2f2;\">";
     for (const auto& column : columns) {
-        html << "<th>" << column << "</th>";
+        html << "<th style=\"border: 1px solid #ddd; padding: 8px;\">" << column << "</th>";
     }
     html << "</tr>";
 
@@ -25,10 +27,11 @@ string html_table(const DataFrame& df, const string& note, const string& format)
     if (type == "single") {
         size_t n_row = data.size();
         for (size_t i = 0; i < n_row; ++i) {
-            html << "<tr class=\"" << ((i % 2 == 1) ? "odd-row " : "")
-                << ((i == n_row - 1) ? "last-row " : "") << "\">";
+            html << "<tr style=\"background-color: "
+                << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
+                << " border: 1px solid #ddd;\">";
             for (size_t j = 0; j < n_col; ++j) {
-                html << "<td>" << data[i][j] << "</td>";
+                html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << data[i][j] << "</td>";
             }
             html << "</tr>";
         }
@@ -41,20 +44,23 @@ string html_table(const DataFrame& df, const string& note, const string& format)
             size_t n_row = group_data.size();
 
             // First row with rowspan
-            html << "<tr class=\"" << ((i % 2 == 1) ? "odd-row " : "")
-                << ((i == n_group - 1 && n_row == 1) ? "last-row " : "") << "\">";
-            html << "<td rowspan=\"" << n_row << "\" style=\"font-weight: bold;\">" << group_name << "</td>";
+            html << "<tr style=\"background-color: "
+                << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
+                << " border: 1px solid #ddd;\">";
+            html << "<td rowspan=\"" << n_row << "\" style=\"font-weight: bold; border: 1px solid #ddd; padding: 8px;\">"
+                << group_name << "</td>";
             for (size_t k = 1; k < n_col; ++k) {
-                html << "<td>" << group_data[0][k] << "</td>";
+                html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << group_data[0][k] << "</td>";
             }
             html << "</tr>";
 
             // Remaining rows
             for (size_t j = 1; j < n_row; ++j) {
-                html << "<tr class=\"" << ((i % 2 == 1) ? "odd-row " : "")
-                    << ((i == n_group - 1 && j == n_row - 1) ? "last-row " : "") << "\">";
+                html << "<tr style=\"background-color: "
+                    << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
+                    << " border: 1px solid #ddd;\">";
                 for (size_t k = 1; k < n_col; ++k) {
-                    html << "<td>" << group_data[j][k] << "</td>";
+                    html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << group_data[j][k] << "</td>";
                 }
                 html << "</tr>";
             }
