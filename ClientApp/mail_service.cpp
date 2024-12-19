@@ -355,7 +355,6 @@ void checkMail() {
                         runClient(subject, body, admin, response_subject, response_body, filename, response_data);
 
                         cout << "Response mail: " << response_body << "\n";
-                        cout << "Filename: " << filename << "\n";
 
                         sendMail(admin, response_subject, response_body, response_data, filename);
                     }
@@ -373,7 +372,7 @@ void checkMail() {
 }
 
 void checkMailsContinuously() {
-    while (isRunning) {
+    while (true) {
         checkMail();
         this_thread::sleep_for(chrono::seconds(1));
     }
