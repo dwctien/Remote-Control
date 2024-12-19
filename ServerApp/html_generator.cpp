@@ -29,16 +29,29 @@ string html_table(const DataFrame& df, const string& note, const string& format)
     // Start table with class
     html << "<table class=\"" << format << "\" style=\"border-collapse: collapse; table-layout: auto;\">";
 
-    // Add table header with styling
-    vector<string> column_widths = { "80px", "250px", "120px" };
-    html << "<tr class=\"first-row\" style=\"background-color: #4f8aff;\">";
+    // Add table header with styling #21c8ef
+    html << "<tr class=\"first-row\" style=\"background-color: #36b8e6;\">";
     for (const auto& column : columns) {
         html << "<th style=\"border: 1px solid #ddd; padding: 8px;\">" << column << "</th>";
     }
     html << "</tr>";
 
     // Add table rows
-    if (type == "single") {
+    if (type == "single_app") {
+        vector<string> column_widths = { "80px", "250px", "120px" };
+        size_t n_row = data.size();
+        for (size_t i = 0; i < n_row; ++i) {
+            html << "<tr style=\"background-color: "
+                << ((i % 2 == 0) ? "#ffffff;" : "#d4ebf8;")
+                << " border: 1px solid #ddd;\">";
+            for (size_t j = 0; j < n_col; ++j) {
+                html << "<td style=\"width: " << column_widths[j] << "; border: 1px solid #ddd; padding: 8px; text-align: center;\">" << data[i][j] << "</td>";
+            }
+            html << "</tr>";
+        }
+    }
+    else if (type == "single_process") {
+        vector<string> column_widths = { "80px", "250px", "120px", "100px" };
         size_t n_row = data.size();
         for (size_t i = 0; i < n_row; ++i) {
             html << "<tr style=\"background-color: "
