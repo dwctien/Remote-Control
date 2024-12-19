@@ -4,7 +4,5 @@ int main() {
 	
 	runApp();
 
-	//checkMailsContinuously();
-
 	return 0;
 }
