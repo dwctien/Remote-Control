@@ -31,7 +31,7 @@ Response showTree(const string& path) {
     vector<string> subDirs = listDir(path);
     string html;
     if (subDirs.empty()) {
-        html = "<p>The directory " + path + " does not exist or is empty.</p>";
+        html = html_msg("The directory " + path + " does not exist or is empty.", false, false);
     }
     else {
         html = html_tree(path, subDirs);
