@@ -1,4 +1,4 @@
-#include "webcam.h"
+#include "../include/webcam.h"
 
 cv::Mat capturePhoto() {
     cv::VideoCapture camera(0); // Open webcam with ID 0

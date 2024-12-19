@@ -135,32 +135,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="app.cpp" />
-    <ClCompile Include="file.cpp" />
-    <ClCompile Include="help.cpp" />
     <ClCompile Include="html_generator.cpp" />
-    <ClCompile Include="keyboard.cpp" />
-    <ClCompile Include="process.cpp" />
     <ClCompile Include="request_handle.cpp" />
-    <ClCompile Include="screen.cpp" />
+    <ClCompile Include="service\app.cpp" />
+    <ClCompile Include="service\file.cpp" />
+    <ClCompile Include="service\help.cpp" />
+    <ClCompile Include="service\keyboard.cpp" />
+    <ClCompile Include="service\process.cpp" />
+    <ClCompile Include="service\screen.cpp" />
+    <ClCompile Include="service\webcam.cpp" />
     <ClCompile Include="smain.cpp" />
     <ClCompile Include="ssocket.cpp" />
-    <ClCompile Include="webcam.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="app.h" />
-    <ClInclude Include="file.h" />
-    <ClInclude Include="help.h" />
-    <ClInclude Include="html_generator.h" />
-    <ClInclude Include="keyboard.h" />
-    <ClInclude Include="process.h" />
-    <ClInclude Include="request_handle.h" />
-    <ClInclude Include="screen.h" />
-    <ClInclude Include="ssocket.h" />
-    <ClInclude Include="webcam.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="admin.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\app.h" />
+    <ClInclude Include="include\file.h" />
+    <ClInclude Include="include\help.h" />
+    <ClInclude Include="include\html_generator.h" />
+    <ClInclude Include="include\keyboard.h" />
+    <ClInclude Include="include\process.h" />
+    <ClInclude Include="include\request_handle.h" />
+    <ClInclude Include="include\screen.h" />
+    <ClInclude Include="include\ssocket.h" />
+    <ClInclude Include="include\webcam.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

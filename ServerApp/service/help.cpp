@@ -1,4 +1,4 @@
-#include "help.h"
+#include "../include/help.h"
 
 DataFrame listCommand() {
     DataFrame df;

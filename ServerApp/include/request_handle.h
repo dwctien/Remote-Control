@@ -27,14 +27,8 @@ using Function = function<Response(vector<string>)>;
 // Request tree with various commands (using lambda functions to wrap the actual functions)
 extern map<string, map<string, pair<int, Function>>> requestTree;
 
-extern vector<string> whiteList;
-
 vector<string> tokenize(const string& str);
 
 map<string, string> parseRequest(const string& sender, const string& subject, Function& outFunction, vector<string>& outParams);
-
-vector<string> loadAdmin();
-
-bool addAdmin(string gmailAdmin);
 
 #endif // !_REQUEST_HANDLE_H_

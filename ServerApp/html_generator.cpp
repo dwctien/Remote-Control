@@ -1,4 +1,4 @@
-﻿#include "html_generator.h"
+﻿#include "include/html_generator.h"
 
 string html_escape(const string& input) {
     string escaped;
@@ -100,37 +100,6 @@ string html_table(const DataFrame& df, const string& note, const string& format)
             previous_type = current_type; // Update the previous type
         }
     }
-
-    //else if (type == "group") {
-    //    size_t n_group = data.size();
-    //    for (size_t i = 0; i < n_group; ++i) {
-    //        const auto& group_name = data[i][0];
-    //        const auto& group_data = data[i];
-    //        size_t n_row = group_data.size();
-
-    //        // First row with rowspan
-    //        html << "<tr style=\"background-color: "
-    //            << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
-    //            << " border: 1px solid #ddd;\">";
-    //        html << "<td rowspan=\"" << n_row << "\" style=\"font-weight: bold; border: 1px solid #ddd; padding: 8px;\">"
-    //            << group_name << "</td>";
-    //        for (size_t k = 1; k < n_col; ++k) {
-    //            html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << group_data[0][k] << "</td>";
-    //        }
-    //        html << "</tr>";
-
-    //        // Remaining rows
-    //        for (size_t j = 1; j < n_row; ++j) {
-    //            html << "<tr style=\"background-color: "
-    //                << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
-    //                << " border: 1px solid #ddd;\">";
-    //            for (size_t k = 1; k < n_col; ++k) {
-    //                html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << group_data[j][k] << "</td>";
-    //            }
-    //            html << "</tr>";
-    //        }
-    //    }
-    //}
 
     html << "</table>";
     return html.str();

@@ -1,4 +1,4 @@
-#include "request_handle.h"
+#include "include/request_handle.h"
 
 map<string, map<string, pair<int, Function>>> requestTree = {
     {"file", {
@@ -34,11 +34,6 @@ map<string, map<string, pair<int, Function>>> requestTree = {
     }}
 };
 
-vector<string> whiteList = {
-    "tienduc712@gmail.com",
-    "caotrongkhang9056@gmail.com"
-};
-
 vector<string> tokenize(const string& str) {
     istringstream iss(str);
     vector<string> tokens;
@@ -49,71 +44,16 @@ vector<string> tokenize(const string& str) {
     return tokens;
 }
 
-vector<string> loadAdmin()
-{
-    vector<string> admin;
-    ifstream file("admin.txt");
-    if (!file.is_open())
-        cout << "Cannot open admin file" << endl;
-    else
-    {
-        string line;
-        while (getline(file, line))
-        {
-            if (!line.empty())
-                admin.push_back(line);
-        }
-        file.close();
-    }
-    return admin;
-}
-
-bool addAdmin(string gmailAdmin)
-{
-    ofstream file("admin.txt", ios::app);
-    if (!file.is_open())
-    {
-        cout << "Cannot open admin file" << endl;
-        return false;
-    }
-    else
-    {
-        file << gmailAdmin << endl;
-        file.close();
-        return true;
-    }
-}
-
 map<string, string> parseRequest(const string& sender, const string& subject, Function& outFunction, vector<string>& outParams) {
     auto response = map<string, string>();
     auto tokens = tokenize(subject);
-    
-    vector<string> whiteList = loadAdmin();
-
-    // Add new admin
-    if (sender == "add_Admin") {
-        bool success = addAdmin(subject);
-        response["msg"] = "add_Admin.";
-        if(success)
-            response["command"] = "Add succeeded";
-        else
-            response["command"] = "Add failed";
-        return response;
-    }
-
-    // Send admin file to client
-    if (sender == "get_Admin")
-    {
-        response["msg"] = "get_Admin";
-        return response;
-    }
 
     // Check sender permission
-    if (find(whiteList.begin(), whiteList.end(), sender) == whiteList.end()) {
+    /*if (find(whiteList.begin(), whiteList.end(), sender) == whiteList.end()) {
         response["msg"] = "Permission denied.";
         response["command"] = subject;
         return response;
-    }
+    }*/
 
     // Validate command prefix
     if (tokens.empty() || tokens[0] != APP_REQ) {

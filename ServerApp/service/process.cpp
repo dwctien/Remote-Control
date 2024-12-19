@@ -1,4 +1,4 @@
-#include "process.h"
+#include "../include/process.h"
 
 DataFrame creatProcessDataFrame(vector<string> processNames, vector<string> processIDs, vector<string> processThreads)
 {

@@ -1,4 +1,4 @@
-#include "app.h"
+#include "../include/app.h"
 
 // Helper function to check if a process has a GUI (interactive process)
 bool isGuiProcess(DWORD processID) {
