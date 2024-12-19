@@ -38,7 +38,18 @@ DataFrame listCommand() {
 
 Response showHelp() {
     DataFrame command_table = listCommand();
-    //string note = "This table lists all supported commands.";
-    //string format = "command-table";
-    return { html_table(command_table), vector<BYTE>{} };
+    
+    string note = R"(
+        <div class="note">
+            <p><b>Note:</b></p>
+            <ul>
+                <li>All commands must be written in lowercase.</li>
+                <li><code>&lt;duration&gt;</code> must be a positive integer.</li>
+                <li><code>&lt;path&gt;</code> must be enclosed in quotes "" if it contains spaces, and directories should be separated by a slash "/". 
+                    For example: <code>&lt;path&gt; = "D:/HCMUS.1/HK3/MMT/Project/Description/example.jpg".</code></li>
+            </ul>
+        </div>
+    )";
+
+    return { note + html_table(command_table), vector<BYTE>{} };
 }
