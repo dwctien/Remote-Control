@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="app.cpp" />
     <ClCompile Include="file.cpp" />
+    <ClCompile Include="help.cpp" />
     <ClCompile Include="html_generator.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="process.cpp" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="app.h" />
     <ClInclude Include="file.h" />
+    <ClInclude Include="help.h" />
     <ClInclude Include="html_generator.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="process.h" />
