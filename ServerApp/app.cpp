@@ -28,25 +28,24 @@ bool isGuiProcess(DWORD processID) {
     return false;
 }
 
-DataFrame creatAppDataFrame(vector<string> appNames, vector<string> appIDs)
-{
+DataFrame creatAppDataFrame(vector<string> appNames, vector<string> appIDs) {
     DataFrame dataFrame;
-    dataFrame.columns.push_back("ID Application");
-    dataFrame.columns.push_back("Name Application");
+    dataFrame.columns.push_back("No.");
+    dataFrame.columns.push_back("Application");
+    dataFrame.columns.push_back("ID");
     dataFrame.type = "single";
 
-    for (int i = 0; i < appNames.size(); i++)
-    {
+    for (int i = 0; i < appNames.size(); i++) {
         vector<string> line;
-        line.push_back(appIDs[i]);
+        line.push_back(to_string(i + 1));
         line.push_back(appNames[i]);
+        line.push_back(appIDs[i]);
         dataFrame.data.push_back(line);
     }
     return dataFrame;
 }
 
-Response listApp()
-{
+Response listApp() {
     vector<string> appNames, appIDs, appThreads;
     DataFrame dataFrame;
     Response res;
@@ -88,8 +87,7 @@ Response listApp()
     return res;
 }
 
-Response startApp(string path)
-{
+Response startApp(string path) {
     Response res;
 
     HINSTANCE result = ShellExecuteA(
@@ -111,8 +109,7 @@ Response startApp(string path)
     return res;
 }
 
-Response stopApp(int id)
-{
+Response stopApp(int id) {
     Response res;
 
     // Open a handle to the process using the application ID
@@ -122,8 +119,7 @@ Response stopApp(int id)
     if (hProcess == nullptr || !TerminateProcess(hProcess, 0)) {
         res.first = html_msg("Failed to stop application. Error code: " + to_string(GetLastError()), false, false);
     }
-    else
-    {
+    else {
         CloseHandle(hProcess);
         res.first = html_msg("Successfully stopped application.", true, true);
     }

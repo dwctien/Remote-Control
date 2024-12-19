@@ -1,5 +1,18 @@
 ﻿#include "html_generator.h"
 
+string html_escape(const string& input) {
+    string escaped;
+    for (char c : input) {
+        switch (c) {
+        case '<': escaped += "&lt;"; break;
+        case '>': escaped += "&gt;"; break;
+        default: escaped += c; break;
+        }
+    }
+    return escaped;
+}
+
+
 string html_table(const DataFrame& df, const string& note, const string& format) {
     ostringstream html;
 
@@ -14,10 +27,11 @@ string html_table(const DataFrame& df, const string& note, const string& format)
     const auto& type = df.type;
 
     // Start table with class
-    html << "<table class=\"" << format << "\" style=\"border-collapse: collapse; width: 100%;\">";
+    html << "<table class=\"" << format << "\" style=\"border-collapse: collapse; table-layout: auto;\">";
 
     // Add table header with styling
-    html << "<tr class=\"first-row\" style=\"background-color: #f2f2f2;\">";
+    vector<string> column_widths = { "80px", "250px", "120px" };
+    html << "<tr class=\"first-row\" style=\"background-color: #4f8aff;\">";
     for (const auto& column : columns) {
         html << "<th style=\"border: 1px solid #ddd; padding: 8px;\">" << column << "</th>";
     }
@@ -28,44 +42,95 @@ string html_table(const DataFrame& df, const string& note, const string& format)
         size_t n_row = data.size();
         for (size_t i = 0; i < n_row; ++i) {
             html << "<tr style=\"background-color: "
-                << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
+                << ((i % 2 == 0) ? "#ffffff;" : "#d4ebf8;")
                 << " border: 1px solid #ddd;\">";
             for (size_t j = 0; j < n_col; ++j) {
-                html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << data[i][j] << "</td>";
+                html << "<td style=\"width: " << column_widths[j] << "; border: 1px solid #ddd; padding: 8px; text-align: center;\">" << data[i][j] << "</td>";
             }
             html << "</tr>";
         }
     }
     else if (type == "group") {
-        size_t n_group = data.size();
-        for (size_t i = 0; i < n_group; ++i) {
-            const auto& group_name = data[i][0];
-            const auto& group_data = data[i];
-            size_t n_row = group_data.size();
+        string previous_type; // Track the previous type value
+        size_t rowspan_count = 0; // Count rows for rowspan
+        bool alternate_color = false; // Toggle for alternating colors
 
-            // First row with rowspan
-            html << "<tr style=\"background-color: "
-                << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
-                << " border: 1px solid #ddd;\">";
-            html << "<td rowspan=\"" << n_row << "\" style=\"font-weight: bold; border: 1px solid #ddd; padding: 8px;\">"
-                << group_name << "</td>";
-            for (size_t k = 1; k < n_col; ++k) {
-                html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << group_data[0][k] << "</td>";
+        for (size_t i = 0; i < data.size(); ++i) {
+            const auto& row = data[i];
+            const string& current_type = row[0];
+
+            // Check if the type is the same as the previous one
+            if (current_type != previous_type) {
+                // Start a new group, toggle color
+                alternate_color = !alternate_color;
+
+                // Count rows for this type
+                rowspan_count = 1;
+                for (size_t j = i + 1; j < data.size(); ++j) {
+                    if (data[j][0] == current_type) ++rowspan_count;
+                    else break;
+                }
+
+                // Print the merged cell with rowspan
+                html << "<tr style=\"background-color: "
+                    << (alternate_color ? "#ffffff;" : "#d4ebf8;")
+                    << " border: 1px solid #ddd;\">";
+                html << "<td rowspan=\"" << rowspan_count
+                    << "\" style=\"font-weight: bold; border: 1px solid #ddd; padding: 8px; text-align: center;\">"
+                    << current_type << "</td>";
+            }
+            else {
+                // Start a new row for the same group
+                html << "<tr style=\"background-color: "
+                    << (alternate_color ? "#ffffff;" : "#d4ebf8;")
+                    << " border: 1px solid #ddd;\">";
+            }
+
+            // Add other columns
+            for (size_t j = 1; j < n_col; ++j) {
+                if (j == 1) { // second column
+                    html << "<td style=\"border: 1px solid #ddd; padding: 8px; text-align: center;\">" << html_escape(row[j]) << "</td>";
+                }
+                else if (j == 2) { // third column
+                    html << "<td style=\"border: 1px solid #ddd; padding: 8px; text-align: left;\">" << html_escape(row[j]) << "</td>";
+                }
             }
             html << "</tr>";
 
-            // Remaining rows
-            for (size_t j = 1; j < n_row; ++j) {
-                html << "<tr style=\"background-color: "
-                    << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
-                    << " border: 1px solid #ddd;\">";
-                for (size_t k = 1; k < n_col; ++k) {
-                    html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << group_data[j][k] << "</td>";
-                }
-                html << "</tr>";
-            }
+            previous_type = current_type; // Update the previous type
         }
     }
+
+    //else if (type == "group") {
+    //    size_t n_group = data.size();
+    //    for (size_t i = 0; i < n_group; ++i) {
+    //        const auto& group_name = data[i][0];
+    //        const auto& group_data = data[i];
+    //        size_t n_row = group_data.size();
+
+    //        // First row with rowspan
+    //        html << "<tr style=\"background-color: "
+    //            << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
+    //            << " border: 1px solid #ddd;\">";
+    //        html << "<td rowspan=\"" << n_row << "\" style=\"font-weight: bold; border: 1px solid #ddd; padding: 8px;\">"
+    //            << group_name << "</td>";
+    //        for (size_t k = 1; k < n_col; ++k) {
+    //            html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << group_data[0][k] << "</td>";
+    //        }
+    //        html << "</tr>";
+
+    //        // Remaining rows
+    //        for (size_t j = 1; j < n_row; ++j) {
+    //            html << "<tr style=\"background-color: "
+    //                << ((i % 2 == 0) ? "#ffffff;" : "#f9f9f9;")
+    //                << " border: 1px solid #ddd;\">";
+    //            for (size_t k = 1; k < n_col; ++k) {
+    //                html << "<td style=\"border: 1px solid #ddd; padding: 8px;\">" << group_data[j][k] << "</td>";
+    //            }
+    //            html << "</tr>";
+    //        }
+    //    }
+    //}
 
     html << "</table>";
     return html.str();
@@ -138,10 +203,9 @@ html << R"(
                 font-size: 16px;
             }
 
-            /* Khung lớn nền xanh dương nhạt */
             .outer-container {
-                background-color: #e0f7fa; /* Màu xanh dương nhạt */
-                border: 3px solid #00796b; /* Viền đậm màu xanh lá */
+                background-color: #d4ebf8; /* #e0f7fa */
+                border: 2px solid #0a3981; /* #00796b */
                 border-radius: 10px;
                 padding: 20px;
                 width: 740px;
@@ -151,7 +215,7 @@ html << R"(
             .app__name {
                 text-align: center;
                 font-size: 28px;
-                color: #1e9d95;
+                color: #0a3981; /* #1e9d95 */
                 font-weight: bold;
             }
 
@@ -176,6 +240,12 @@ html << R"(
                 font-weight: bold;
                 word-break: break-all;
             }
+            
+            /* CSS for tables */
+            table {
+                margin: 20px auto; /* Căn giữa bảng */
+                border-collapse: collapse;
+            }
 
             /* CSS for message */
             .message {
@@ -187,7 +257,7 @@ html << R"(
             }
 
             .message.ok {
-                color: #1e9d95;
+                color: #0a3981; /* #1e9d95 */
             }
 
             .message.error {
