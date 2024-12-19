@@ -56,40 +56,10 @@ string base64_encode_str(const string& in) {
     return encoded_data;
 }
 
-//string base64_encode_bin(const BYTE* data, size_t size) {
-//    BIO* bio, * b64;
-//    BUF_MEM* bufferPtr;
-//
-//    b64 = BIO_new(BIO_f_base64());
-//    bio = BIO_new(BIO_s_mem());
-//    BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);  // Avoid newline characters
-//    bio = BIO_push(b64, bio);
-//
-//    BIO_write(bio, data, size);
-//    BIO_flush(bio);
-//    BIO_get_mem_ptr(bio, &bufferPtr);
-//
-//    string encoded_data(bufferPtr->data, bufferPtr->length);
-//    BIO_free_all(bio);
-//
-//    // Convert Base64 to URL-safe Base64
-//    for (char& c : encoded_data) {
-//        if (c == '+') c = '-';
-//        else if (c == '/') c = '_';
-//    }
-//
-//    // Remove padding '='
-//    while (!encoded_data.empty() && encoded_data.back() == '=') {
-//        encoded_data.pop_back();
-//    }
-//
-//    return encoded_data;
-//}
-
 string base64_encode_bin(const BYTE* data, size_t length) {
     static const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    std::string encoded;
+    string encoded;
     int val = 0;
     int valb = -6;
     for (size_t i = 0; i < length; ++i) {
