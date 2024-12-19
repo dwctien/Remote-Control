@@ -61,13 +61,14 @@ install_manifest.txt
 *.tlog
 *.VC.db
 
-# Ignore the env/ folder (heavy libraries)
+# Heavy libraries
 env/
+sfml/
 
-# Ignore config.json file (secret info: client_id, access token,...)
+# Secret info
 config.json
 
-# Ignore media files
+# Media files
 *.png
 *.jpg
 *.avi
