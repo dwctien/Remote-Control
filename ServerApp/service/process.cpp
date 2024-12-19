@@ -1,54 +1,58 @@
 #include "../include/process.h"
 
-DataFrame creatProcessDataFrame(vector<string> processNames, vector<string> processIDs, vector<string> processThreads)
-{
+DataFrame creatProcessDataFrame(vector<string> processNames, vector<string> processIDs, vector<string> processThreads) {
     DataFrame dataFrame;
-    dataFrame.columns.push_back("ID Process");
-    dataFrame.columns.push_back("Name Process");
-    dataFrame.columns.push_back("Thread Process");
-    dataFrame.type = "single";
+    dataFrame.columns.push_back("No.");
+    dataFrame.columns.push_back("Process");
+    dataFrame.columns.push_back("ID");
+    dataFrame.columns.push_back("Thread Count");
+    dataFrame.type = "single_process";
 
-    for (int i = 0; i < processNames.size(); i++)
-    {
+    for (int i = 0; i < processNames.size(); i++) {
         vector<string> line;
-        line.push_back(processIDs[i]);
+        line.push_back(to_string(i + 1));
         line.push_back(processNames[i]);
+        line.push_back(processIDs[i]);
         line.push_back(processThreads[i]);
         dataFrame.data.push_back(line);
     }
     return dataFrame;
 }
 
-void countThread(vector<string>& processNames, vector<string>& processIDs, vector<string>& processThread)
-{
-    vector<string> names, id, thread;   // After count thread
+void countThread(vector<string>& processNames, vector<string>& processIDs, vector<string>& processThread) {
+    vector<string> names, id, thread; // After count thread
 
-    for (int i = 0; i < processNames.size(); i++)
-    {
+    for (int i = 0; i < processNames.size(); i++) {
         bool isCounted = false;
-        for (int j = 0; j < names.size(); j++)
-            if (names[j] == processNames[i])
-            {
+        for (int j = 0; j < names.size(); j++) {
+            if (names[j] == processNames[i]) {
                 isCounted = true;
                 break;
             }
-        if (isCounted)
+        }
+
+        if (isCounted) {
             continue;
+        }
+
         int count = 0;
-        for (int j = i; j < processNames.size(); j++)
-            if (processNames[j] == processNames[i])
+        for (int j = i; j < processNames.size(); j++) {
+            if (processNames[j] == processNames[i]) {
                 count++;
+            }
+        }
+
         names.push_back(processNames[i]);
         id.push_back(processIDs[i]);
         thread.push_back(to_string(count));
     }
+
     processNames = names;
     processIDs = id;
     processThread = thread;
 }
 
-Response listProcess()
-{
+Response listProcess() {
     vector<string> processNames, processIDs, processThreads;
     DataFrame dataFrame;
     Response res;
@@ -88,8 +92,7 @@ Response listProcess()
     return res;
 }
 
-Response startProcess(string path)
-{
+Response startProcess(string path) {
     Response res;
     
     HINSTANCE result = ShellExecuteA(
@@ -111,8 +114,7 @@ Response startProcess(string path)
     return res;
 }
 
-Response stopProcess(int processId)
-{
+Response stopProcess(int processId) {
     Response res;
     
     // Open a handle to the process using the process ID
@@ -122,11 +124,9 @@ Response stopProcess(int processId)
     if (hProcess == nullptr || !TerminateProcess(hProcess, 0)) {
         res.first = html_msg("Failed to stop process. Error code: " + to_string(GetLastError()), false, false);
     }
-    else
-    {
+    else {
         CloseHandle(hProcess);
         res.first = html_msg("Successfully stopped process.", true, true);
     }
     return res;
 }
-

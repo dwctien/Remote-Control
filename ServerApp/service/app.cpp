@@ -33,7 +33,7 @@ DataFrame creatAppDataFrame(vector<string> appNames, vector<string> appIDs) {
     dataFrame.columns.push_back("No.");
     dataFrame.columns.push_back("Application");
     dataFrame.columns.push_back("ID");
-    dataFrame.type = "single";
+    dataFrame.type = "single_app";
 
     for (int i = 0; i < appNames.size(); i++) {
         vector<string> line;
