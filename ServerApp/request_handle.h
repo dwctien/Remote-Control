@@ -16,6 +16,7 @@
 #include "keyboard.h"
 #include "process.h"
 #include "app.h"
+#include "help.h"
 
 const string APP_REQ = "[ctrl]"; // Prefix to validate commands
 

