@@ -66,20 +66,7 @@ void receiveData(SOCKET clientSocket, string& subject, string& mail_body, string
     }
 }
 
-bool saveVectorToFile(const string& filename, const vector<BYTE>& fileData) {
-    ofstream file(filename, ios::binary);
-    if (!file) {
-        cerr << "Error: Cannot open file " << filename << " for writing.\n";
-        return false;
-    }
-
-    // Write the vector data to the file
-    file.write(reinterpret_cast<const char*>(fileData.data()), fileData.size());
-    file.close();
-    return true;
-}
-
-void runClient(string request, string server_ip, string admin, string& response_subject, string& response_body, string& filename, vector <BYTE>& response_data) {
+void runClient(string request, string server_ip, string& response_subject, string& response_body, string& filename, vector <BYTE>& response_data) {
     WSADATA wsaData;
     SOCKET clientSocket;
     struct sockaddr_in serverAddr;
@@ -104,8 +91,6 @@ void runClient(string request, string server_ip, string admin, string& response_
 
     // Use inet_pton instead of inet_addr
     if (inet_pton(AF_INET, server_ip.c_str(), &serverAddr.sin_addr) <= 0) {
-        cout << "Invalid address or address not supported\n";
-        response_subject = "Invalid address";
         closesocket(clientSocket);
         WSACleanup();
         return;
@@ -121,19 +106,9 @@ void runClient(string request, string server_ip, string admin, string& response_
     }
     cout << "Connected to server.\n";
 
-    // Send request and admin's mail to server
-    string message = "admin=" + admin + "&request=" + request;
-    cout << "Data send to server: " << message << "\n";
-    send(clientSocket, message.c_str(), message.size(), 0);
+    send(clientSocket, request.c_str(), request.size(), 0);
 
     receiveData(clientSocket, response_subject, response_body, filename, response_data);
-
-    /*if (saveVectorToFile("screenshot.png", response_data)) {
-        cout << "File saved successfully to " << "screen.png" << ".\n";
-    }
-    else {
-        cerr << "Failed to save file.\n";
-    }*/
 
     // Close the connection
     closesocket(clientSocket);

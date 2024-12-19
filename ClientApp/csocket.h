@@ -18,8 +18,6 @@ uint32_t receiveSize(SOCKET socket);
 
 void receiveData(SOCKET clientSocket, string& subject, string& mail_body, string& filename, vector<BYTE>& mail_data);
 
-void runClient(string request, string server_ip, string admin, string& response_subject, string& response_body, string& filename, vector <BYTE>& response_data);
-
-bool saveVectorToFile(const string& filename, const vector<BYTE>& fileData);
+void runClient(string request, string server_ip, string& response_subject, string& response_body, string& filename, vector <BYTE>& response_data);
 
 #endif // !_CSOCKET_H_

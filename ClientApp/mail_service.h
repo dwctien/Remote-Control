@@ -14,6 +14,7 @@
 #include <regex>
 #include <thread>
 #include "csocket.h"
+#include "html_generator.h"
 
 using json = nlohmann::json;
 using namespace std;
@@ -36,6 +37,10 @@ bool sendMail(const string& recipient, const string& subject, const string& body
 bool readMail(const string& accessToken, const string& messageId, string& subject, string& body, string& admin);
 
 void markEmailAsRead(const string& accessToken, const string& messageId);
+
+vector<string> getAdminList(string filename = "admin.txt");
+
+bool validateAdmin(string admin);
 
 bool validateIP(string ip_addr);
 

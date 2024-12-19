@@ -274,10 +274,43 @@ void markEmailAsRead(const string& accessToken, const string& messageId) {
     }
 }
 
+vector<string> getAdminList(string filename) {
+    vector<string> list = {};
+
+    ifstream ifile;
+    ifile.open(filename);
+    if (!ifile.is_open()) {
+        return list;
+    }
+
+    string line = "";
+    while (!ifile.eof()) {
+        getline(ifile, line);
+        cout << line << "\n";
+        list.push_back(line);
+    }
+
+    ifile.close();
+    return list;
+}
+
+bool validateAdmin(string admin) {
+    vector<string> adminList = getAdminList();
+    if (find(adminList.begin(), adminList.end(), admin) == adminList.end()) {
+        return false;
+    }
+}
+
 bool validateIP(string ip_addr) {
-    regex ipRegex(R"((\d{1,3}\.){3}\d{1,3})");
+    regex ipRegex(R"(^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$)");
     smatch match;
-    if (regex_search(ip_addr, match, ipRegex)) {
+    if (regex_match(ip_addr, match, ipRegex)) {
+        for (int i = 1; i <= 4; ++i) {
+            int part = stoi(match[i].str());
+            if (part < 0 || part > 255) {
+                return false;
+            }
+        }
         return true;
     }
     return false;
@@ -321,15 +354,21 @@ void checkMail() {
                     string filename = "";
                     vector <BYTE> response_data = {};
 
-                    if (validateIP(body)) {
-                        runClient(subject, body, admin, response_subject, response_body, filename, response_data);
-
-                        cout << "Response mail: " << response_body << "\n";
-
+                    if (!validateAdmin(admin)) {
+                        response_subject = "Reply for request: " + subject;
+                        response_body = html_mail(subject, html_msg("You are not allowed to control this PC.", false, true));
+                        sendMail(admin, response_subject, response_body, response_data, filename);
+                    }
+                    else if (!validateIP(body)) {
+                        response_subject = "Reply for request: " + subject;
+                        response_body = html_mail(subject, html_msg("The IP address is invalid.", false, true));
                         sendMail(admin, response_subject, response_body, response_data, filename);
                     }
                     else {
-                        response_body = "Server's IP address is invalid. Please try again.";
+                        runClient(subject, body, response_subject, response_body, filename, response_data);
+
+                        cout << "Response mail: " << response_body << "\n";
+
                         sendMail(admin, response_subject, response_body, response_data, filename);
                     }
                 }
