@@ -35,32 +35,19 @@ void getInfoFromClient(string& msg, string& admin, string& request) {
 }
 
 void responder(SOCKET clientSocket, string received_data) {
-    string admin = "", request = "";
-
-    getInfoFromClient(received_data, admin, request);
+    string request = received_data;
 
     cout << "Received request: " << request << "\n";
 
     Function func;
     vector<string> params;
-    auto parse_result = parseRequest(admin, request, func, params);
+    auto parse_result = parseRequest(request, func, params);
 
     string subject = "Reply for request: " + parse_result["command"];
     string mail_body;
     vector<BYTE> mail_data;
 
-    if (parse_result["msg"] == "add_Admin"){
-        subject = parse_result["command"];
-    }
-    else if (parse_result["msg"] == "get_Admin")
-    {
-        Response content = getFile("admin.txt");
-        mail_data = content.second;
-    }
-    else if (parse_result["msg"] == "Permission denied.") {
-        mail_body = html_mail(request, html_msg("You are not allowed to control this PC.", false, true));
-    }
-    else if (!func || parse_result["msg"] != "Parse request successfully.") {
+    if (!func || parse_result["msg"] != "Parse request successfully.") {
         mail_body = html_mail(request, html_msg(parse_result["msg"], false, true));
     }
     else {
@@ -73,9 +60,6 @@ void responder(SOCKET clientSocket, string received_data) {
             mail_body = html_mail(request, html_msg("The format of arguments might be incorrect.", false, true));
         }
     }
-
-    cout << "Response subject: " << subject << "\n";
-    cout << "Response mail: " << mail_body << "\n";
 
     sendData(clientSocket, subject, mail_body, mail_data);
 }
@@ -141,29 +125,6 @@ SOCKET listenForClient(SOCKET serverSocket) {
     return clientSocket;
 }
 
-//void handleClient(SOCKET clientSocket) {
-//    char recvBuf[1024];
-//    int recvSize;
-//
-//    while (true) {
-//        recvSize = recv(clientSocket, recvBuf, sizeof(recvBuf), 0);
-//
-//        if (recvSize == SOCKET_ERROR) {
-//            cout << "Error receiving data from client" << endl;
-//            break;
-//        }
-//        if (recvSize == 0) {
-//            cout << "Client disconnected" << endl;
-//            break;
-//        }
-//
-//        string received_data(recvBuf, recvSize);
-//        responder(clientSocket, received_data); 
-//    }
-//
-//    closesocket(clientSocket);
-//}
-
 void runServer() {
     // Initialize
     SOCKET serverSocket = initializeServerSocket();
@@ -191,4 +152,3 @@ void runServer() {
     closesocket(serverSocket);
     WSACleanup();
 }
-

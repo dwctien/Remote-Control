@@ -29,6 +29,6 @@ extern map<string, map<string, pair<int, Function>>> requestTree;
 
 vector<string> tokenize(const string& str);
 
-map<string, string> parseRequest(const string& sender, const string& subject, Function& outFunction, vector<string>& outParams);
+map<string, string> parseRequest(const string& subject, Function& outFunction, vector<string>& outParams);
 
 #endif // !_REQUEST_HANDLE_H_

@@ -44,16 +44,9 @@ vector<string> tokenize(const string& str) {
     return tokens;
 }
 
-map<string, string> parseRequest(const string& sender, const string& subject, Function& outFunction, vector<string>& outParams) {
+map<string, string> parseRequest(const string& subject, Function& outFunction, vector<string>& outParams) {
     auto response = map<string, string>();
     auto tokens = tokenize(subject);
-
-    // Check sender permission
-    /*if (find(whiteList.begin(), whiteList.end(), sender) == whiteList.end()) {
-        response["msg"] = "Permission denied.";
-        response["command"] = subject;
-        return response;
-    }*/
 
     // Validate command prefix
     if (tokens.empty() || tokens[0] != APP_REQ) {
