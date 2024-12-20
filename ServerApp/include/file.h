@@ -18,9 +18,9 @@ namespace fs = std::filesystem; // from C++17
 
 vector<string> diskList();
 
-vector<string> listDir(const string& path = "");
+vector<string> listDir(string& path);
 
-Response showTree(const string& path = "");
+Response showTree(string& path);
 
 Response copyFile(const string& source, const string& destination);
 
