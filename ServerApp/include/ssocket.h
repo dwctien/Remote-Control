@@ -11,9 +11,9 @@
 
 #define PORT 8888
 
-void sendData(SOCKET clientSocket, const string& subject, const string& mailBody, const vector<BYTE>& data);
+void sendAll(SOCKET socket, const char* data, size_t size);
 
-void getInfoFromClient(string& msg, string& admin, string& request);
+void sendData(SOCKET clientSocket, const string& subject, const string& mailBody, const vector<BYTE>& data);
 
 void responder(SOCKET clientSocket, string received_data);
 

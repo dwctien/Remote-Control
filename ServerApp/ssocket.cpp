@@ -1,5 +1,17 @@
 #include "include/ssocket.h"
 
+void sendAll(SOCKET socket, const char* data, size_t size) {
+    size_t totalSent = 0;
+    while (totalSent < size) {
+        int sent = send(socket, data + totalSent, size - totalSent, 0);
+        if (sent == SOCKET_ERROR) {
+            cerr << "Error: Failed to send data. Code: " << WSAGetLastError() << "\n";
+            return;
+        }
+        totalSent += sent;
+    }
+}
+
 void sendData(SOCKET clientSocket, const string& subject, const string& mail_body, const vector<BYTE>& mail_data) {
     // Send the subject
     uint32_t subjectSize = htonl(subject.size());
@@ -8,29 +20,20 @@ void sendData(SOCKET clientSocket, const string& subject, const string& mail_bod
     
     // Send the mail_body
     uint32_t bodySize = htonl(mail_body.size());
-    send(clientSocket, reinterpret_cast<const char*>(&bodySize), sizeof(bodySize), 0);
-    send(clientSocket, mail_body.c_str(), mail_body.size(), 0);
+    sendAll(clientSocket, reinterpret_cast<const char*>(&bodySize), sizeof(bodySize));
+    sendAll(clientSocket, mail_body.c_str(), mail_body.size()); 
     
 
     // Send the data (image or video) after the body
     if (!mail_data.empty()) {
         uint32_t dataSize = htonl(mail_data.size());
-        send(clientSocket, reinterpret_cast<const char*>(&dataSize), sizeof(dataSize), 0);
-        send(clientSocket, reinterpret_cast<const char*>(mail_data.data()), mail_data.size(), 0);
+        sendAll(clientSocket, reinterpret_cast<const char*>(&dataSize), sizeof(dataSize));
+        sendAll(clientSocket, reinterpret_cast<const char*>(mail_data.data()), mail_data.size()); 
     }
     else {
         uint32_t dataSize = 0;
-        send(clientSocket, reinterpret_cast<const char*>(&dataSize), sizeof(dataSize), 0);
-    }
-}
-
-void getInfoFromClient(string& msg, string& admin, string& request) {
-    size_t adminPos = msg.find("admin=");
-    size_t requestPos = msg.find("&request=");
-
-    if (adminPos != string::npos && requestPos != string::npos) {
-        admin = msg.substr(adminPos + 6, requestPos - adminPos - 6); // 6 is the length of "admin="
-        request = msg.substr(requestPos + 9); // 9 is the length of "&request="
+        dataSize = htonl(dataSize);
+        sendAll(clientSocket, reinterpret_cast<const char*>(&dataSize), sizeof(dataSize));
     }
 }
 
