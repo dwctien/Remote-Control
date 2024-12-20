@@ -3,7 +3,7 @@
 vector<string> diskList() {
     vector<string> disks;
     for (char c = 'A'; c <= 'Z'; ++c) {
-        string path = string(1, c) + ":\\";
+        string path = string(1, c) + ":/";
         if (fs::exists(path) && fs::is_directory(path)) {
             disks.push_back(path);
         }
@@ -11,9 +11,10 @@ vector<string> diskList() {
     return disks;
 }
 
-vector<string> listDir(const string& path) {
+vector<string> listDir(string& path) {
     vector<string> result;
-    if (path.empty()) {
+    if (path == "0") {
+        path = "This PC";
         vector<string> disks = diskList();
         result.insert(result.end(), disks.begin(), disks.end());
     }
@@ -27,7 +28,7 @@ vector<string> listDir(const string& path) {
     return result;
 }
 
-Response showTree(const string& path) {
+Response showTree(string& path) {
     vector<string> subDirs = listDir(path);
     string html;
     if (subDirs.empty()) {
