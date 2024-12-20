@@ -12,14 +12,14 @@ DataFrame listCommand() {
         { type[1], "app stop <ID>", "Close the running app with the given ID." },
         { type[1], "app start <path>", "Start the app at the specified path." },
 
-        { type[2], "app list", "Get the list of running apps on the device."},
-        { type[2], "app stop <ID>", "Close the running app with the given ID." },
-        { type[2], "app start <path>", "Start the app at the specified path." },
+        { type[2], "process list", "Get the list of running processes on the device."},
+        { type[2], "process stop <ID>", "Close the running process with the given ID." },
+        { type[2], "process start <path>", "Start the process at the specified path." },
 
         { type[3], "pc shutdown", "Shut down the device." },
         { type[3], "pc restart", "Restart the device." },
 
-        { type[4], "file explore <path>", "Show the directory tree (1-level) of the <path>." },
+        { type[4], "file explore <path>", "Show the directory tree (1-level) of the <path>. If <path> = 0, all drives on the device will be listed." },
         { type[4], "file copy <source> <dest>", "Copy the file or directory <source> to <dest>." },
         { type[4], "file get <path>", "Get the file or directory specified by <path>." },
         { type[4], "file deletebin <path>", "Move the file to the Recycle Bin." },
@@ -45,7 +45,7 @@ Response showHelp() {
             <ul>
                 <li>All commands must start with <code>[ctrl]</code> and be written in lowercase.</li>
                 <li><code>&lt;duration&gt;</code> must be a positive integer.</li>
-                <li><code>&lt;path&gt;</code> must be enclosed in quotes "" if it contains spaces, and directories should be separated by a slash "/". 
+                <li><code>&lt;path&gt;</code> must be enclosed in quotes "" if it contains spaces, and directories must be separated by a slash "/". 
                     For example: <code>&lt;path&gt; = "D:/HCMUS.1/HK3/MMT/Project/Description/example.jpg"</code>.</li>
             </ul>
         </div>
