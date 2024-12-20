@@ -1,4 +1,4 @@
-﻿#include "html_generator.h"
+﻿#include "include/html_generator.h"
 
 string html_msg(const string& msg, bool status, bool bold_all) {
     ostringstream html;

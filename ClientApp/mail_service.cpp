@@ -1,5 +1,5 @@
-#include "mail_service.h"
-#include "globals.h"
+#include "include/mail_service.h"
+#include "include/globals.h"
 
 json loadConfig(const string& config_file_path) {
     ifstream config_file(config_file_path);

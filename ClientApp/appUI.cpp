@@ -1,5 +1,5 @@
-#include "AppUI.h"
-#include "globals.h"
+#include "include/appUI.h"
+#include "include/globals.h"
 
 std::thread threadCheckMail;
 std::mutex mtx;
