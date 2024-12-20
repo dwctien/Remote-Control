@@ -69,6 +69,5 @@ sfml/
 config.json
 
 # Media files
-*.png
 *.jpg
 *.avi
