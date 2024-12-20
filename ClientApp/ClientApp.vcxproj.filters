@@ -24,13 +24,13 @@
     <ClCompile Include="csocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app_interface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="html_generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="appUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,13 +41,13 @@
     <ClInclude Include="csocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app_interface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="html_generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="appUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

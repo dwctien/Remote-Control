@@ -31,6 +31,10 @@ map<string, map<string, pair<int, Function>>> requestTree = {
     }},
     {"help", {
         {"get",     {0, [](vector<string> params) { return showHelp(); }}}
+    }},
+    {"pc", {
+        {"shutdown",{0, [](vector<string> params) { return shutdownPC(); }}},
+        {"restart", {0, [](vector<string> params) { return restartPC(); }}}
     }}
 };
 

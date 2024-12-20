@@ -141,7 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="app_interface.cpp" />
+    <ClCompile Include="appUI.cpp" />
     <ClCompile Include="cmain.cpp" />
     <ClCompile Include="csocket.cpp" />
     <ClCompile Include="globals.cpp" />
@@ -149,7 +149,7 @@
     <ClCompile Include="mail_service.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app_interface.h" />
+    <ClInclude Include="appUI.h" />
     <ClInclude Include="csocket.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="html_generator.h" />

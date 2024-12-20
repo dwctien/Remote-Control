@@ -126,7 +126,7 @@ Response stopProcess(int processId) {
     }
     else {
         CloseHandle(hProcess);
-        res.first = html_msg("Successfully stopped process.", true, true);
+        res.first = html_msg("Process stopped successfully.", true, true);
     }
     return res;
 }

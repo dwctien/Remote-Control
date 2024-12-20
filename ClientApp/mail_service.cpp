@@ -286,8 +286,9 @@ vector<string> getAdminList(string filename) {
     string line = "";
     while (!ifile.eof()) {
         getline(ifile, line);
-        cout << line << "\n";
-        list.push_back(line);
+        if (!line.empty()) {
+            list.push_back(line);
+        }
     }
 
     ifile.close();
@@ -381,8 +382,39 @@ void checkMail() {
 }
 
 void checkMailsContinuously() {
-    while (true) {
+    while (isRunning) {
         checkMail();
         this_thread::sleep_for(chrono::seconds(1));
+    }
+}
+
+// ui-related -------------------------------------------------------------------------
+bool isValidEmailAddress(const string& email, vector<string> emailList) {
+    const std::regex emailPattern(
+        R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)"
+    );
+    return std::regex_match(email, emailPattern) &&
+        (std::find(emailList.begin(), emailList.end(), email) == emailList.end());
+}
+
+void removeMail(const string& email, vector<string>& emailList) {
+    auto it = find(emailList.begin(), emailList.end(), email);
+    if (it != emailList.end()) {
+        emailList.erase(it);
+    }
+}
+
+bool updateAdmin(vector<string> gmails) {
+    ofstream file("admin.txt");
+    if (!file.is_open()) {
+        cout << "Cannot open admin file" << endl;
+        return false;
+    }
+    else {
+        for (int i = 0; i < gmails.size(); i++) {
+            file << gmails[i] << endl;
+        }
+        file.close();
+        return true;
     }
 }

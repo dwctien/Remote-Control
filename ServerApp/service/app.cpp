@@ -121,7 +121,7 @@ Response stopApp(int id) {
     }
     else {
         CloseHandle(hProcess);
-        res.first = html_msg("Successfully stopped application.", true, true);
+        res.first = html_msg("Application closed successfully.", true, true);
     }
     return res;
 }

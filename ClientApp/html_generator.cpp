@@ -100,7 +100,7 @@ html << R"(
     </head>
     <body>
     <div class="outer-container">
-        <p class="app__name">Remote Control by Email Service</p>
+        <p class="app__name">Remote PC Control via Email</p>
         <div class="inner-container">
             <p class="app__greeting">Greeting from <span style="font-weight: bold;">Group X</span> - 23CTT2, University of Science, VNUHCM.</p>
             <p class="app__desc">This is our final project for <span style="font-weight: bold;">Computer Networking</span> Course (CSC10008).</p>

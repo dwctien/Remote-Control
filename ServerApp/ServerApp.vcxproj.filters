@@ -48,11 +48,9 @@
     <ClCompile Include="service\webcam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="admin.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
+    <ClCompile Include="service\pc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\app.h">
@@ -83,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\webcam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

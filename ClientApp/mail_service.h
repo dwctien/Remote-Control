@@ -48,4 +48,11 @@ void checkMail();
 
 void checkMailsContinuously();
 
+// ui-related -------------------------------------------------------------------------
+bool isValidEmailAddress(const string& email, vector<string> emailList);
+
+void removeMail(const string& email, vector<string>& emailList);
+
+bool updateAdmin(vector<string> gmails);
+
 #endif // !_MAIL_SERVICE_H_

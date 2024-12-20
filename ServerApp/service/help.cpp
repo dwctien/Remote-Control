@@ -43,10 +43,10 @@ Response showHelp() {
         <div class="note">
             <p><b>Note:</b></p>
             <ul>
-                <li>All commands must be written in lowercase.</li>
+                <li>All commands must start with <code>[ctrl]</code> and be written in lowercase.</li>
                 <li><code>&lt;duration&gt;</code> must be a positive integer.</li>
                 <li><code>&lt;path&gt;</code> must be enclosed in quotes "" if it contains spaces, and directories should be separated by a slash "/". 
-                    For example: <code>&lt;path&gt; = "D:/HCMUS.1/HK3/MMT/Project/Description/example.jpg".</code></li>
+                    For example: <code>&lt;path&gt; = "D:/HCMUS.1/HK3/MMT/Project/Description/example.jpg"</code>.</li>
             </ul>
         </div>
     )";

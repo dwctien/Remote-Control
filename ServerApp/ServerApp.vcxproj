@@ -141,6 +141,7 @@
     <ClCompile Include="service\file.cpp" />
     <ClCompile Include="service\help.cpp" />
     <ClCompile Include="service\keyboard.cpp" />
+    <ClCompile Include="service\pc.cpp" />
     <ClCompile Include="service\process.cpp" />
     <ClCompile Include="service\screen.cpp" />
     <ClCompile Include="service\webcam.cpp" />
@@ -148,14 +149,12 @@
     <ClCompile Include="ssocket.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="admin.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="include\app.h" />
     <ClInclude Include="include\file.h" />
     <ClInclude Include="include\help.h" />
     <ClInclude Include="include\html_generator.h" />
     <ClInclude Include="include\keyboard.h" />
+    <ClInclude Include="include\pc.h" />
     <ClInclude Include="include\process.h" />
     <ClInclude Include="include\request_handle.h" />
     <ClInclude Include="include\screen.h" />
