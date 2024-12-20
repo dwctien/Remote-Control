@@ -1,4 +1,4 @@
-#include "csocket.h"
+﻿#include "csocket.h"
 
 uint32_t receiveSize(SOCKET socket) {
     uint32_t size = 0;
@@ -8,6 +8,18 @@ uint32_t receiveSize(SOCKET socket) {
         return 0;
     }
     return ntohl(size);
+}
+
+void receiveAll(SOCKET socket, char* buffer, size_t size) {
+    size_t totalReceived = 0;
+    while (totalReceived < size) {
+        int received = recv(socket, buffer + totalReceived, size - totalReceived, 0);
+        if (received == SOCKET_ERROR || received == 0) {
+            cerr << "Error: Failed to receive data. Code: " << WSAGetLastError() << "\n";
+            return;
+        }
+        totalReceived += received;
+    }
 }
 
 void receiveData(SOCKET clientSocket, string& subject, string& mail_body, string& filename, vector<BYTE>& mail_data) {
@@ -23,46 +35,55 @@ void receiveData(SOCKET clientSocket, string& subject, string& mail_body, string
 
     // mail_body
     uint32_t bodySize = receiveSize(clientSocket);
+    cout << "size: " << bodySize << "\n";
     if (bodySize > 0) {
         char* buffer = new char[bodySize + 1];
         memset(buffer, 0, bodySize + 1);
-        recv(clientSocket, buffer, bodySize, 0);
+        receiveAll(clientSocket, buffer, bodySize);
         mail_body.assign(buffer, bodySize);
         delete[] buffer;
     }
 
+
     // mail_data (including filename)
     uint32_t dataSize = receiveSize(clientSocket);
-    if (dataSize > 0) {
-        // Receive the filename length (4 bytes)
-        uint32_t filenameLength = 0;
-        int bytesReceived = recv(clientSocket, reinterpret_cast<char*>(&filenameLength), sizeof(filenameLength), 0);
-        if (bytesReceived == SOCKET_ERROR || bytesReceived < sizeof(filenameLength)) {
-            cerr << "Error: Failed to receive filename length. Code: " << WSAGetLastError() << "\n";
-            return;
-        }
-        // Ensure filenameLength is in correct byte order (big-endian)
-        filenameLength = ntohl(filenameLength);
+    if (dataSize == 0) {
+        return;
+    }
 
-        // Receive the filename based on the received length
-        if (filenameLength > 0) {
-            char* buffer = new char[filenameLength + 1];
-            memset(buffer, 0, filenameLength + 1);
-            recv(clientSocket, buffer, filenameLength, 0);
-            filename.assign(buffer, filenameLength);
-            delete[] buffer;
-        }
-        // Receive the actual file data
-        size_t totalReceived = 0;
-        mail_data.resize(dataSize - sizeof(filenameLength) - filenameLength);
-        while (totalReceived < mail_data.size()) {
-            int recvSize = recv(clientSocket, reinterpret_cast<char*>(mail_data.data() + totalReceived), mail_data.size() - totalReceived, 0);
-            if (recvSize == SOCKET_ERROR) {
-                cerr << "Error: Failed to receive full binary data. Code: " << WSAGetLastError() << "\n";
-                return;
-            }
-            totalReceived += recvSize;
-        }
+    // Check reasonable size limit
+    const uint32_t MAX_DATA_SIZE = 50 * 1024 * 1024; // 50 MB
+    if (dataSize > MAX_DATA_SIZE) {
+        cerr << "Error: Data size exceeds limit\n";
+        return;
+    }
+
+    // Get filename length
+    uint32_t filenameLength = 0;
+    receiveAll(clientSocket, reinterpret_cast<char*>(&filenameLength), sizeof(filenameLength));
+    filenameLength = ntohl(filenameLength); // Convert to correct byte order
+
+    // Check filename size limit
+    const uint32_t MAX_FILENAME_LENGTH = 256; // Limit filename to 256 characters
+    if (filenameLength > MAX_FILENAME_LENGTH) {
+        cerr << "Error: Filename length exceeds limit\n";
+        return;
+    }
+
+    // Get filename
+    if (filenameLength > 0) {
+        char* buffer = new char[filenameLength + 1];
+        memset(buffer, 0, filenameLength + 1);
+        receiveAll(clientSocket, buffer, filenameLength);
+        filename.assign(buffer, filenameLength);
+        delete[] buffer;
+    }
+
+    // Get the actual data (file)
+    size_t fileDataSize = dataSize - sizeof(filenameLength) - filenameLength;
+    if (fileDataSize > 0) {
+        mail_data.resize(fileDataSize);
+        receiveAll(clientSocket, reinterpret_cast<char*>(mail_data.data()), fileDataSize);
     }
 }
 
@@ -99,7 +120,7 @@ void runClient(string request, string server_ip, string& response_subject, strin
     // Connect to the server
     if (connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
         cout << "Connection to server failed\n";
-        response_subject = "Fail to connect";
+        response_subject = html_mail(request, html_msg("Connection to server failed.", false, false));
         closesocket(clientSocket);
         WSACleanup();
         return;

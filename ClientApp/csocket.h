@@ -6,6 +6,7 @@
 #include <vector>
 #include <winsock2.h>
 #include <ws2tcpip.h> // For inet_pton
+#include "html_generator.h"
 
 #pragma comment(lib, "ws2_32.lib") // Link Winsock library
 
@@ -15,6 +16,8 @@
 using namespace std;
 
 uint32_t receiveSize(SOCKET socket);
+
+void receiveAll(SOCKET socket, char* buffer, size_t size);
 
 void receiveData(SOCKET clientSocket, string& subject, string& mail_body, string& filename, vector<BYTE>& mail_data);
 
