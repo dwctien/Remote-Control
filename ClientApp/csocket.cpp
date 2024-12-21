@@ -94,14 +94,16 @@ void runClient(string request, string server_ip, string& response_subject, strin
 
     // Initialize Winsock
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        cout << "WSAStartup failed\n";
+        response_subject = "Reply for request: " + request;
+        response_body = html_mail(request, html_msg("WSAStartup failed.", false, false));
         return;
     }
 
     // Create a socket for the client
     clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (clientSocket == INVALID_SOCKET) {
-        cout << "Socket creation failed\n";
+        response_subject = "Reply for request: " + request;
+        response_body = html_mail(request, html_msg("Socket creation failed.", false, false));
         WSACleanup();
         return;
     }
@@ -112,6 +114,8 @@ void runClient(string request, string server_ip, string& response_subject, strin
 
     // Use inet_pton instead of inet_addr
     if (inet_pton(AF_INET, server_ip.c_str(), &serverAddr.sin_addr) <= 0) {
+        response_subject = "Reply for request: " + request;
+        response_body = html_mail(request, html_msg("Invalid IP address.", false, false));
         closesocket(clientSocket);
         WSACleanup();
         return;
@@ -119,12 +123,13 @@ void runClient(string request, string server_ip, string& response_subject, strin
 
     // Connect to the server
     if (connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
-        cout << "Connection to server failed\n";
-        response_subject = html_mail(request, html_msg("Connection to server failed.", false, false));
+        response_subject = "Reply for request: " + request;
+        response_body = html_mail(request, html_msg("Connection to server failed.", false, false));
         closesocket(clientSocket);
         WSACleanup();
         return;
     }
+
     cout << "Connected to server.\n";
 
     send(clientSocket, request.c_str(), request.size(), 0);

@@ -382,7 +382,15 @@ void Notification::handleInput(sf::Event& event, sf::RenderWindow& window) {
 // ===============================================
 
 void runApp() {
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Remote PC Control via Email");
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Remote PC Control via Email", sf::Style::Titlebar | sf::Style::Close);
+
+    sf::Image icon;
+    if (!icon.loadFromFile("graphic/icon.png")) {
+        std::cerr << "Failed to load icon!" << std::endl;
+        return;
+    }
+
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     StateManager* stateManager = StateManager::getInstance();
 
