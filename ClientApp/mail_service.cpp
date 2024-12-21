@@ -362,7 +362,7 @@ void checkMail() {
                     }
                     else if (!validateIP(body)) {
                         response_subject = "Reply for request: " + subject;
-                        response_body = html_mail(subject, html_msg("The IP address is invalid.", false, true));
+                        response_body = html_mail(subject, html_msg("Make sure the server is on and the server's IP address is correct.", false, true));
                         sendMail(admin, response_subject, response_body, response_data, filename);
                     }
                     else {
