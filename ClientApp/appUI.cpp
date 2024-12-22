@@ -382,6 +382,9 @@ void Notification::handleInput(sf::Event& event, sf::RenderWindow& window) {
 // ===============================================
 
 void runApp() {
+
+    ShowWindow(GetConsoleWindow(), SW_HIDE);
+
     sf::RenderWindow window(sf::VideoMode(800, 800), "Remote PC Control via Email", sf::Style::Titlebar | sf::Style::Close);
 
     sf::Image icon;
