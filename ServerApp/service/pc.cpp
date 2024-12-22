@@ -4,7 +4,7 @@ bool ShutdownUsingWinAPI(bool reboot) {
     // Parameters for the shutdown function
     LPWSTR machineName = NULL;          // NULL means the current machine
     LPWSTR message = NULL; // Message displayed to the user before shutdown
-    DWORD timeout = 0;                   // Delay time before shutdown in seconds (0 = immediate)
+    DWORD timeout = 5;                   // Delay time before shutdown in seconds (0 = immediate)
     BOOL forceAppsClosed = TRUE;         // Force all applications to close without saving
     BOOL rebootAfterShutdown = reboot;    // FALSE = Shutdown, TRUE = Restart the machine
 
