@@ -1,29 +1,45 @@
 #include "../include/pc.h"
 
-bool ShutdownUsingPowerShell() {
-    const char* command = "powershell.exe -Command \"Stop-Computer -Force\"";
+bool ShutdownUsingWinAPI(bool reboot) {
+    // Parameters for the shutdown function
+    LPWSTR machineName = NULL;          // NULL means the current machine
+    LPWSTR message = NULL; // Message displayed to the user before shutdown
+    DWORD timeout = 0;                   // Delay time before shutdown in seconds (0 = immediate)
+    BOOL forceAppsClosed = TRUE;         // Force all applications to close without saving
+    BOOL rebootAfterShutdown = reboot;    // FALSE = Shutdown, TRUE = Restart the machine
 
-    int result = system(command);
+    // Request necessary privileges to initiate a system shutdown
+    HANDLE hToken;
+    TOKEN_PRIVILEGES tkp;
 
-    if (result == 0) {
-        return true; 
+    // Open the process token to adjust privileges
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) {
+        return false; // Return false if the token could not be opened
     }
-    else {
-        return false;
-    }
-}
 
-bool RestartUsingPowerShell() {
-    const char* command = "powershell.exe -Command \"Restart-Computer -Force\"";
+    // Lookup the shutdown privilege (SE_SHUTDOWN_NAME) and enable it
+    LookupPrivilegeValue(NULL, SE_SHUTDOWN_NAME, &tkp.Privileges[0].Luid);
+    tkp.PrivilegeCount = 1; // Set the privilege count to 1
+    tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED; // Enable the privilege
 
-    int result = system(command);
+    // Adjust the token privileges for the current process
+    AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, (PTOKEN_PRIVILEGES)NULL, 0);
+    if (GetLastError() != ERROR_SUCCESS) {
+        return false; // Return false if the privilege adjustment fails
+    }
 
-    if (result == 0) {
-        return true;
+    // Call InitiateSystemShutdownEx to perform the shutdown
+    if (!InitiateSystemShutdownEx(
+        machineName,               // Target machine (NULL = current machine)
+        message,                   // Message to display before shutdown
+        timeout,                   // Timeout before shutdown (in seconds)
+        forceAppsClosed,           // Force applications to close
+        rebootAfterShutdown,       // Reboot the system after shutdown
+        SHTDN_REASON_MAJOR_OTHER | SHTDN_REASON_MINOR_OTHER)) { // Reason for shutdown
+        return false; // Return false if the shutdown command fails
     }
-    else {
-        return false;
-    }
+
+    return true; // Return true if the shutdown is successfully initiated
 }
 
 Response shutdownPC() {
@@ -31,7 +47,7 @@ Response shutdownPC() {
     succ.first = html_msg("Shutdown successful.", true, true);
     fail.first = html_msg("Shutdown failed.", false, false);
 
-    if (ShutdownUsingPowerShell()) {
+    if (ShutdownUsingWinAPI(false)) {
         return succ;
     }
     else {
@@ -44,7 +60,7 @@ Response restartPC() {
     succ.first = html_msg("Restart successful.", true, true);
     fail.first = html_msg("Restart failed.", false, false);
 
-    if (RestartUsingPowerShell()) {
+    if (ShutdownUsingWinAPI(true)) {
         return succ;
     }
     else {
