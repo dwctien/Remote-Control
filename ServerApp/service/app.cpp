@@ -100,7 +100,7 @@ Response startApp(string path) {
     );
 
     if ((int)result <= 32) {
-        res.first = html_msg("Failed to start application. Error code: " + to_string((int)result), false, false);
+        res.first = html_msg("Failed to start application. Error code: " + to_string((int)result) + ".", false, false);
     }
     else {
         res.first = html_msg("Application started successfully.", true, true);
@@ -115,13 +115,21 @@ Response stopApp(int id) {
     // Open a handle to the process using the application ID
     HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, id);
 
-    // Terminate the application
-    if (hProcess == nullptr || !TerminateProcess(hProcess, 0)) {
-        res.first = html_msg("Failed to stop application. Error code: " + to_string(GetLastError()), false, false);
+    if (hProcess == nullptr) {
+        res.first = html_msg("Failed to stop application. Error code: " + to_string(GetLastError()) + ".", false, false);
+        return res;
+    }
+
+    // Terminate the process
+    if (!TerminateProcess(hProcess, 0)) {
+        res.first = html_msg("Failed to stop application. Error code: " + to_string(GetLastError()) + ".", false, false);
     }
     else {
-        CloseHandle(hProcess);
-        res.first = html_msg("Application closed successfully.", true, true);
+        res.first = html_msg("Process stopped successfully.", true, true);
     }
+
+    // Close the handle
+    CloseHandle(hProcess);
+
     return res;
 }

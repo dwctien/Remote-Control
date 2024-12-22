@@ -105,7 +105,7 @@ Response startProcess(string path) {
     );
 
     if ((int)result <= 32) {
-        res.first = html_msg("Failed to start process. Error code: " + to_string((int)result), false, false);
+        res.first = html_msg("Failed to start process. Error code: " + to_string((int)result) + ".", false, false);
     }
     else {
         res.first = html_msg("Process started successfully.", true, true);
@@ -120,13 +120,21 @@ Response stopProcess(int processId) {
     // Open a handle to the process using the process ID
     HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, processId);
 
+    if (hProcess == nullptr) {
+        res.first = html_msg("Failed to stop process. Error code: " + to_string(GetLastError()) + ".", false, false);
+        return res;
+    }
+
     // Terminate the process
-    if (hProcess == nullptr || !TerminateProcess(hProcess, 0)) {
-        res.first = html_msg("Failed to stop process. Error code: " + to_string(GetLastError()), false, false);
+    if (!TerminateProcess(hProcess, 0)) {
+        res.first = html_msg("Failed to stop process. Error code: " + to_string(GetLastError()) + ".", false, false);
     }
     else {
-        CloseHandle(hProcess);
         res.first = html_msg("Process stopped successfully.", true, true);
     }
+
+    // Close the handle
+    CloseHandle(hProcess);
+
     return res;
 }
