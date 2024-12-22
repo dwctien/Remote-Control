@@ -35,7 +35,6 @@ void receiveData(SOCKET clientSocket, string& subject, string& mail_body, string
 
     // mail_body
     uint32_t bodySize = receiveSize(clientSocket);
-    cout << "size: " << bodySize << "\n";
     if (bodySize > 0) {
         char* buffer = new char[bodySize + 1];
         memset(buffer, 0, bodySize + 1);
@@ -115,7 +114,7 @@ void runClient(string request, string server_ip, string& response_subject, strin
     // Use inet_pton instead of inet_addr
     if (inet_pton(AF_INET, server_ip.c_str(), &serverAddr.sin_addr) <= 0) {
         response_subject = "Reply for request: " + request;
-        response_body = html_mail(request, html_msg("Invalid IP address. Make sure the server is on and the server's IP address is correct.", false, false));
+        response_body = html_mail(request, html_msg("Invalid IP address.", false, false));
         closesocket(clientSocket);
         WSACleanup();
         return;
