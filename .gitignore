@@ -64,10 +64,16 @@ install_manifest.txt
 # Heavy libraries
 env/
 sfml/
+env-server/
+env-client/
 
 # Secret info
 config.json
 
 # Media files
+*.pnj
 *.jpg
 *.avi
+
+# Installer
+*.vdproj
