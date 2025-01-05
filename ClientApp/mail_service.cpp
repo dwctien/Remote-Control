@@ -112,6 +112,8 @@ string refreshToken(const string& client_id, const string& client_secret, const 
 
     curl_easy_cleanup(curl);
 
+    cout << response_data << "\n";
+
     // Parse JSON response to extract access token
     json response_json = json::parse(response_data);
     if (response_json.contains("access_token")) {
@@ -384,7 +386,7 @@ void checkMail() {
 void checkMailsContinuously() {
     while (isRunning) {
         checkMail();
-        this_thread::sleep_for(chrono::seconds(1));
+        this_thread::sleep_for(chrono::seconds(2));
     }
 }
 
