@@ -71,7 +71,7 @@ env-client/
 config.json
 
 # Media files
-*.pnj
+*.png
 *.jpg
 *.avi
 *.ico
