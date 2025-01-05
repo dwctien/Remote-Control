@@ -45,8 +45,9 @@ Response showHelp() {
             <ul>
                 <li>All commands must start with <code>[ctrl]</code> and be written in lowercase.</li>
                 <li><code>&lt;duration&gt;</code> must be a positive integer.</li>
-                <li><code>&lt;path&gt;</code> must be enclosed in quotes "" if it contains spaces, and directories must be separated by a slash "/". 
-                    For example: <code>&lt;path&gt; = "D:/HCMUS.1/HK3/MMT/Project/Description/example.jpg"</code>.</li>
+                <li><code>&lt;path&gt;</code> must be enclosed in double quotes ("") if it contains spaces, and directories must be separated by a slash ("/").
+                    Additionally, all characters in the path must be Latin alphabet characters.
+                    For example: <code>&lt;path&gt; = "D:/HCMUS.1/HK3/MMT/Project/Description/Day la mot vi du.jpg"</code>.</li>
             </ul>
         </div>
     )";
