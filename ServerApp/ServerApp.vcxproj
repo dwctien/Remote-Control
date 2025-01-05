@@ -132,6 +132,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)env\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>libcurl.lib;libssl.lib;libcrypto.lib;opencv_core4100.lib;opencv_imgcodecs4100.lib;opencv_imgproc4100.lib;opencv_highgui4100.lib;opencv_img_hash4100.lib;opencv_videoio4100.lib;User32.lib;Gdi32.lib;Advapi32.lib</AdditionalDependencies>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -41,6 +41,7 @@ void responder(SOCKET clientSocket, string received_data) {
     string request = received_data;
 
     cout << "Received request: " << request << "\n";
+    cout << "Processing request...\n";
 
     Function func;
     vector<string> params;
@@ -65,6 +66,7 @@ void responder(SOCKET clientSocket, string received_data) {
     }
 
     sendData(clientSocket, subject, mail_body, mail_data);
+    cout << "Response sent.\n";
 }
 
 SOCKET initializeServerSocket() {
@@ -150,6 +152,7 @@ void runServer() {
         string received_data(recvBuf, recvSize);
         responder(clientSocket, received_data);
         closesocket(clientSocket);
+        cout << "Client disconnected.\n\n";
     }
 
     closesocket(serverSocket);

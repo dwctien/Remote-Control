@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClientApp", "ClientApp\Clie
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerApp", "ServerApp\ServerApp.vcxproj", "{21313E38-10EB-48A0-98CD-5BAECE24A38A}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RemoteControl-Client", "RemoteControl-Client\RemoteControl-Client.vdproj", "{819662E6-34AF-450F-A49C-EEA9FCA6B860}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RemoteControl-Server", "RemoteControl-Server\RemoteControl-Server.vdproj", "{FC71B557-02DD-4C6E-9E1F-0DC92AE154A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +35,14 @@ Global
 		{21313E38-10EB-48A0-98CD-5BAECE24A38A}.Release|x64.Build.0 = Release|x64
 		{21313E38-10EB-48A0-98CD-5BAECE24A38A}.Release|x86.ActiveCfg = Release|Win32
 		{21313E38-10EB-48A0-98CD-5BAECE24A38A}.Release|x86.Build.0 = Release|Win32
+		{819662E6-34AF-450F-A49C-EEA9FCA6B860}.Debug|x64.ActiveCfg = Debug
+		{819662E6-34AF-450F-A49C-EEA9FCA6B860}.Debug|x86.ActiveCfg = Debug
+		{819662E6-34AF-450F-A49C-EEA9FCA6B860}.Release|x64.ActiveCfg = Release
+		{819662E6-34AF-450F-A49C-EEA9FCA6B860}.Release|x86.ActiveCfg = Release
+		{FC71B557-02DD-4C6E-9E1F-0DC92AE154A5}.Debug|x64.ActiveCfg = Debug
+		{FC71B557-02DD-4C6E-9E1F-0DC92AE154A5}.Debug|x86.ActiveCfg = Debug
+		{FC71B557-02DD-4C6E-9E1F-0DC92AE154A5}.Release|x64.ActiveCfg = Release
+		{FC71B557-02DD-4C6E-9E1F-0DC92AE154A5}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
