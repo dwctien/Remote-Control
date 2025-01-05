@@ -59,6 +59,13 @@ void responder(SOCKET clientSocket, string received_data) {
             Response content = func(params);
             mail_body = html_mail(request, content.first);
             mail_data = content.second;
+
+            // Check the size of attachment file
+            const size_t MAX_ATTACHMENT_SIZE = 20 * 1024 * 1024; // 20 MB
+            if (mail_data.size() > MAX_ATTACHMENT_SIZE) {
+                mail_body = html_mail(request, html_msg("The attached file is too large to send via email.", false, false));
+                mail_data.clear();
+            }
         }
         catch (const exception& e) {
             mail_body = html_mail(request, html_msg("The format of arguments might be incorrect.", false, true));
