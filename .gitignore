@@ -74,6 +74,7 @@ config.json
 *.pnj
 *.jpg
 *.avi
+*.ico
 
 # Installer
 *.vdproj
