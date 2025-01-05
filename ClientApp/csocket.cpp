@@ -123,7 +123,7 @@ void runClient(string request, string server_ip, string& response_subject, strin
     // Connect to the server
     if (connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
         response_subject = "Reply for request: " + request;
-        response_body = html_mail(request, html_msg("Connection to server failed. Make sure the server is on and the server's IP address is correct.", false, false));
+        response_body = html_mail(request, html_msg("Connection to server failed. Make sure the server is on and the server's IP address is valid.", false, false));
         closesocket(clientSocket);
         WSACleanup();
         return;
