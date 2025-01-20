@@ -1,58 +1,36 @@
 # Remote PC Control via Email
+This is a project for the Computer Networking course in Semester 3, HCMUS.
 
 ## Description
-Remote PC Control via Email is a client-server application developed as part of the Computer Networking course project. This application enables an admin to remotely control and monitor server activities by leveraging the Gmail API and socket programming. Key functionalities include:
+**Remote PC Control via Email** allows an administrator to send commands to a remote PC through email to perform various system operations.  
 
-- Admin sends requests via Gmail with specific subjects (e.g., "get screenshot") and server IP addresses.
-- The client reads unread emails using Gmail API and forwards the requests to the server.
-- The server processes requests and sends results (e.g., PNG files) back to the client via sockets.
-- The client returns the results to the admin via Gmail API without requiring re-authentication.
+The application operates by leveraging email as a communication medium between the admin and the target PC (server). Commands are sent to a designated host email, which the client application continuously monitors. When a valid command is detected, the client relays it to the server application via a secure TCP connection. The server processes the command, executes the requested operation, and returns a response to the client. Finally, the client uses email to deliver the results back to the administrator.  
 
-The implementation features:
-- OAuth2 authentication for Gmail API.
-- Socket programming for client-server communication.
-- Handling of various admin commands to perform operations like capturing screenshots.
+## Features
+The application provides the following capabilities for the admin to control the server remotely:
 
-## Run the Application
-You can run the application in two ways:
+1. **Process and Application Management**
+   - List all running processes/applications.
+   - Start a new process/application by specifying its path.
+   - Stop a running process/application by its ID.
 
-### 1. Build from Source Code (for Developers)
-To build the application from source, follow these steps:
+2. **System Control**
+   - Shutdown the server machine.
+   - Restart the server machine.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
-   cd your-repo-name
-   ```
+3. **File Operations**
+   - Browse directories tree on the server.
+   - Retrieve files from the server.
+   - Copy files from one location to another.
+   - Delete files temporarily or permanently.
 
-2. Install required dependencies:
-   - **Windows**: Ensure you have Visual Studio 2022 installed.
-   - **Dependencies**:
-     - Gmail API library
-     - OpenSSL (for secure sockets)
-     - OpenCV (for screenshot functionality)
+5. **Keyboard Monitoring and Control**
+   - Capture keystrokes over a specified duration (keylogger).
+   - Lock the keyboard for a specified duration to prevent input.
 
-3. Open the project in Visual Studio 2022.
-
-4. Build the solution:
-   - Set the build configuration to `Release`.
-   - Select **Build > Build Solution** or press `Ctrl+Shift+B`.
-
-5. Run the server and client executables as described in the installation steps below.
-
-### 2. Install Pre-Built Application (for End Users)
-To install and use the pre-built application:
-
-1. Download the `.msi` installer from the [Releases](https://github.com/yourusername/your-repo-name/releases) page.
-
-2. Run the installer and follow the on-screen instructions.
-
-3. After installation:
-   - A shortcut will be created on your desktop.
-   - Double-click the shortcut to start the application.
-
-4. **Testing:**
-   - Send a test email to the client email address configured in the Gmail API.
-   - Monitor the console for log outputs and results.
-
-For more details, refer to the documentation provided in the `docs/` folder of the repository.
+6. **Screen and Webcam Capture**
+   - Take screenshots of the server screen.
+   - Capture images or record videos from the server's webcam.
+  
+7. **Command Listing**
+   - List all available commands that the admin can use, along with their usage instructions.
