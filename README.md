@@ -34,3 +34,24 @@ The application provides the following capabilities for the admin to control the
   
 7. **Command Listing**
    - List all available commands that the admin can use, along with their usage instructions.
+  
+## Installation Guide
+
+To use the application, follow these steps:
+
+1. **Download the Installers**  
+   - Visit the [Releases](https://github.com/dwctien/Remote-Control/releases/tag/v1.0.0) page on the project's GitHub repository.  
+   - Download the following files:  
+     - `RemoteControl-Client.msi` for the client application.  
+     - `RemoteControl-Server.msi` for the server application.  
+
+2. **Install the Applications**  
+   - Double-click on the `.msi` file you downloaded.  
+   - Follow the on-screen instructions to complete the installation process.
+
+3. **Run the Applications**  
+   - After installation, shortcuts will be created on your desktop.
+   - Double-click the respective shortcut to start the application.
+  
+> [!NOTE]
+> For a deeper understanding of how this project is designed, please refer to the accompanying `report.pdf` file available in the repository.
